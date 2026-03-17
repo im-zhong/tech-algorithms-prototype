@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技专题服务算法库 - 全功能演示版</title>
+    <style>
+        :root {
+            --primary: #1890ff;
+            --primary-light: #40a9ff;
+            --primary-dark: #096dd9;
+            --primary-subtle: #e6f7ff;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-hover: #f0f5ff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --shadow: rgba(0, 0, 0, 0.06);
+            --shadow-lg: rgba(0, 0, 0, 0.1);
+            --success: #52c41a;
+            --warning: #faad14;
+            --danger: #ff4d4f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-light);
+            min-height: 100vh;
+            color: var(--text-primary);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-white);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px 0;
+            box-shadow: 2px 0 8px var(--shadow);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .menu-section-title {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 16px 20px 8px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+            user-select: none;
+        }
+
+        .menu-item:hover {
+            background: var(--bg-hover);
+            color: var(--primary);
+        }
+
+        .menu-item.active {
+            background: var(--primary-subtle);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .menu-item-icon {
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item.active .menu-item-icon {
+            transform: scale(1.15);
+        }
+
+        .menu-item-text {
+            font-size: 0.9rem;
+        }
+
+        /* Make menu items more clickable */
+        .menu-item {
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat-item {
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        .config-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .config-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .config-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .config-item input, .config-item select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .config-item input:focus, .config-item select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkbox-label::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .checkbox-label:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .checkbox-label.checked {
+            background: var(--primary-subtle);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 12px rgba(24, 144, 255, 0.3);
+        }
+
+        .checkbox-label.checked::before {
+            opacity: 0.08;
+        }
+
+        .checkbox-label.checked .checkbox-icon {
+            transform: scale(1.1);
+            opacity: 1;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 8px rgba(24, 144, 255, 0.5);
+        }
+
+        .checkbox-icon {
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid currentColor;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0.8);
+            opacity: 0.6;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 10px;
+            color: var(--primary);
+        }
+
+        .checkbox-label:active {
+            transform: scale(0.97);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .btn:active::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(24, 144, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-subtle);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Button feedback animation */
+        @keyframes btnClick {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-clicked {
+            animation: btnClick 0.2s ease;
+        }
+
+        .viz-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .viz-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .viz-modes {
+            display: flex;
+            gap: 6px;
+        }
+
+        .viz-mode-btn {
+            padding: 6px 12px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .viz-mode-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .viz-mode-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .viz-canvas {
+            height: 300px;
+            background: linear-gradient(135deg, #e6f7ff 0%, #f0f5ff 50%, #e6f7ff 100%);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--primary-light);
+            box-shadow: inset 0 0 20px rgba(24, 144, 255, 0.1);
+        }
+
+        .viz-canvas canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Fallback message when canvas not supported */
+        .viz-canvas::before {
+            content: '📊 正在加载可视化...';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary);
+            font-size: 0.9rem;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .viz-canvas canvas + .viz-canvas::before {
+            display: none;
+        }
+
+        .results-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-white);
+        }
+
+        .results-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .export-dropdown {
+            position: relative;
+        }
+
+        .export-btn {
+            padding: 6px 14px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .export-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .export-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-width: 160px;
+            display: none;
+            z-index: 100;
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--shadow-lg);
+        }
+
+        .export-menu.show { display: block; }
+
+        .export-item {
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .export-item:hover {
+            background: var(--primary-subtle);
+            color: var(--primary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--bg-light);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.2s ease;
+        }
+
+        .data-table tr:hover td {
+            background: var(--primary-subtle);
+        }
+
+        .data-table .highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-white);
+        }
+
+        .pagination-info {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-btn {
+            padding: 6px 12px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-subtle);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .detail-btn {
+            padding: 4px 10px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .detail-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-subtle);
+        }
+
+        .ai-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .ai-header h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .ai-query-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 14px 18px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .ai-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+        }
+
+        .ai-examples {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .ai-example {
+            padding: 6px 14px;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ai-example:hover {
+            background: var(--primary-subtle);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .ai-result {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 150px;
+            border: 1px solid var(--border-light);
+        }
+
+        .ai-result-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .ai-result-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .workspace-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .workspace-header h3 {
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .workspace-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .workspace-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .workspace-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .workspace-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .workspace-item-name {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .workspace-item-time {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.show { 
+            display: flex; 
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: modalSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Page-specific decorations */
+        .page-decoration {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-subtle), transparent);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Loading animation */
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Page transition animations */
+        .main-content {
+            animation: pageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pageEnter {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .config-panel, .viz-panel, .results-panel {
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+        }
+
+        .config-panel { animation-delay: 0.05s; }
+        .viz-panel { animation-delay: 0.1s; }
+        .results-panel { animation-delay: 0.15s; }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* AI Page special styles */
+        .ai-focused .config-panel,
+        .ai-focused .viz-panel,
+        .ai-focused .results-panel {
+            display: none;
+        }
+
+        .ai-focused .ai-section {
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Detail button animation */
+        .detail-btn:active {
+            transform: scale(0.95);
+            background: var(--primary-subtle);
+        }
+
+        /* Export menu animation */
+        .export-menu {
+            animation: menuSlide 0.2s ease;
+        }
+
+        @keyframes menuSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(24, 144, 255, 0.3);
+            z-index: 2000;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar { width: 220px; }
+            .main-content { margin-left: 220px; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .config-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-badge">KG</div>
+            <div class="sidebar-title">科技专题服务算法库</div>
+            <div class="sidebar-subtitle">深圳市科技创新服务平台</div>
+        </div>
+
+        <div class="menu-section-title">核心功能</div>
+        <div class="menu-item active" data-id="1">
+            <span class="menu-item-icon">🎯</span>
+            <span class="menu-item-text">基础指标分析模型</span>
+        </div>
+        <div class="menu-item" data-id="2">
+            <span class="menu-item-icon">🕸</span>
+            <span class="menu-item-text">产业全要素图谱</span>
+        </div>
+        <div class="menu-item" data-id="3">
+            <span class="menu-item-icon">⚖️</span>
+            <span class="menu-item-text">产业链深度分析</span>
+        </div>
+        <div class="menu-item" data-id="4">
+            <span class="menu-item-icon">🔬</span>
+            <span class="menu-item-text">技术链深度分析</span>
+        </div>
+        <div class="menu-item" data-id="5">
+            <span class="menu-item-icon">🏢</span>
+            <span class="menu-item-text">企业深度分析</span>
+        </div>
+        <div class="menu-item" data-id="6">
+            <span class="menu-item-icon">🎓</span>
+            <span class="menu-item-text">科研机构分析</span>
+        </div>
+        <div class="menu-item" data-id="7">
+            <span class="menu-item-icon">👤</span>
+            <span class="menu-item-text">人才深度分析</span>
+        </div>
+        <div class="menu-item" data-id="8">
+            <span class="menu-item-icon">📋</span>
+            <span class="menu-item-text">政策深度分析</span>
+        </div>
+        <div class="menu-item" data-id="9">
+            <span class="menu-item-icon">⭐</span>
+            <span class="menu-item-text">产业服务分析</span>
+        </div>
+        <div class="menu-item" data-id="10">
+            <span class="menu-item-icon">📊</span>
+            <span class="menu-item-text">产业综合分析</span>
+        </div>
+
+        <div class="menu-section-title">智能服务</div>
+        <div class="menu-item" data-id="ai">
+            <span class="menu-item-icon">🤖</span>
+            <span class="menu-item-text">AI智能报告</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title" id="pageTitle">基础指标分析模型</div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">模块分类</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">80+</div>
+                    <div class="stat-label">算法模型</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">指标体系</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-panel">
+            <div class="config-title">🎯 挖掘约束条件配置</div>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label>选择产业链</label>
+                    <select id="industrySelect">
+                        <option>新一代信息技术</option>
+                        <option>新能源</option>
+                        <option>生物医药</option>
+                        <option>新材料</option>
+                        <option>数字经济</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>指标层级</label>
+                    <select id="levelSelect">
+                        <option>一级指标</option>
+                        <option>二级指标</option>
+                        <option>三级指标</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>时间范围</label>
+                    <select id="timeSelect">
+                        <option>2024年</option>
+                        <option>2023年</option>
+                        <option>2022年</option>
+                        <option>近3年</option>
+                        <option>近5年</option>
+                    </select>
+                </div>
+            </div>
+            <div class="checkbox-group" id="checkboxGroup">
+                <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 产业链指标</label>
+                <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 技术指标</label>
+                <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 企业指标</label>
+                <label class="checkbox-label"><span class="checkbox-icon">✓</span> 人才指标</label>
+                <label class="checkbox-label"><span class="checkbox-icon">✓</span> 科研指标</label>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="runAnalysis(event)">
+                    <span>🔍</span> 执行分析
+                </button>
+                <button class="btn btn-secondary" onclick="addToReport(event)">
+                    <span>📌</span> 铉选到报告
+                </button>
+            </div>
+        </div>
+
+        <div class="viz-panel">
+            <div class="viz-header">
+                <div class="viz-title">📊 图谱可视化</div>
+                <div class="viz-modes">
+                    <button class="viz-mode-btn active" onclick="switchVizMode(this, 'force')">力导向图</button>
+                    <button class="viz-mode-btn" onclick="switchVizMode(this, 'hierarchy')">层级树</button>
+                    <button class="viz-mode-btn" onclick="switchVizMode(this, 'galaxy')">星系图</button>
+                </div>
+            </div>
+            <div class="viz-canvas">
+                <canvas id="mainCanvas"></canvas>
+            </div>
+        </div>
+
+        <div class="results-panel">
+            <div class="results-header">
+                <div class="results-title">📋 分析结果 (共 <span id="totalCount">156</span> 条)</div>
+                <div class="export-dropdown">
+                    <button class="export-btn" onclick="toggleExportMenu()">⬇️ 导出 ▾</button>
+                    <div class="export-menu" id="exportMenu">
+                        <div class="export-item" onclick="exportData('csv')">📄 导出CSV</div>
+                        <div class="export-item" onclick="exportData('xlsx')">📊 导出Excel</div>
+                        <div class="export-item" onclick="exportData('png')">🖼 导出图片</div>
+                        <div class="export-item" onclick="exportData('pdf')">📑 导出PDF</div>
+                    </div>
+                </div>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>数量</th>
+                        <th>趋势</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="pagination-info">第 <span id="currentPage">1</span> / <span id="totalPages">5</span> 页，每页 <span id="pageSize">10</span> 条</div>
+                <div class="pagination-controls">
+                    <button class="page-btn" onclick="changePage('first')" id="firstBtn">首页</button>
+                    <button class="page-btn" onclick="changePage(-1, null)" id="prevBtn">上一页</button>
+                    <button class="page-btn active" onclick="changePage(0, 1)" data-page="1">1</button>
+                    <button class="page-btn" onclick="changePage(0, 2)" data-page="2">2</button>
+                    <button class="page-btn" onclick="changePage(0, 3)" data-page="3">3</button>
+                    <button class="page-btn" onclick="changePage(0, 4)" data-page="4">4</button>
+                    <button class="page-btn" onclick="changePage(0, 5)" data-page="5">5</button>
+                    <button class="page-btn" onclick="changePage(1, null)" id="nextBtn">下一页</button>
+                    <button class="page-btn" onclick="changePage('last')" id="lastBtn">末页</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-section">
+            <div class="ai-header">
+                <span style="font-size:1.3rem;">🤖</span>
+                <h3>AI智能报告生成</h3>
+            </div>
+            <div class="ai-query-box">
+                <input type="text" class="ai-input" placeholder="用自然语言输入您想调查的对象..." id="aiQuery">
+                <button class="btn btn-primary" onclick="generateAIReport(event)">🔍 深度挖掘</button>
+            </div>
+            <div class="ai-examples">
+                <span class="ai-example" onclick="setAIQuery('深圳AI领域专家')">👤 学者查询</span>
+                <span class="ai-example" onclick="setAIQuery('新能源汽车产业链')">🏭 企业查询</span>
+                <span class="ai-example" onclick="setAIQuery('半导体产业')">🗺 产业链查询</span>
+            </div>
+            <div class="ai-result" id="aiResult">
+                <div class="ai-result-title">📊 报告生成</div>
+                <div class="ai-result-content">输入查询内容，点击"深度挖掘"生成分析报告...</div>
+            </div>
+        </div>
+
+        <div class="workspace-section">
+            <div class="workspace-header">
+                <h3>📋 报告工作台</h3>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-secondary" style="padding:6px 12px;font-size:0.8rem;" onclick="clearWorkspace()">清空全部</button>
+                    <button class="btn btn-primary" style="padding:6px 12px;font-size:0.8rem;" onclick="generateWorkspaceReport(event)">🤖 AI整合</button>
+                </div>
+            </div>
+            <div class="workspace-items" id="workspaceItems">
+                <div class="empty-state">暂无铉选内容，请点击"铉选到报告"添加分析结论</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">详情分析</div>
+                <div class="modal-close" onclick="closeModal()">×</div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Page-specific data configurations
+        const pageConfigs = {
+            '1': {
+                title: '基础指标分析模型',
+                industry: ['新一代信息技术', '新能源', '生物医药', '新材料', '数字经济'],
+                data: [
+                    {name: "新一代信息技术", type: "产业链", count: "156项", trend: "↑12%", detail: "涵盖软件、硬件、通信等细分领域，技术创新活跃"},
+                    {name: "新能源", type: "产业链", count: "89项", trend: "↑8%", detail: "包含光伏、储能、动力电池等，产业增速快"},
+                    {name: "生物医药", type: "产业链", count: "124项", trend: "↑15%", detail: "覆盖医疗器械、生物制药等，发展潜力大"},
+                    {name: "新材料", type: "产业链", count: "67项", trend: "↑5%", detail: "包含先进复合材料等，应用广泛"},
+                    {name: "数字经济", type: "产业链", count: "98项", trend: "↑22%", detail: "数据服务、数字内容等，增速最快"},
+                    {name: "高端装备", type: "产业链", count: "78项", trend: "↑6%", detail: "工业机器人、自动化设备等"},
+                    {name: "集成电路", type: "产业链", count: "92项", trend: "↑18%", detail: "芯片设计、制造封装等，核心领域"},
+                    {name: "人工智能", type: "新兴产业", count: "134项", trend: "↑25%", detail: "机器学习、计算机视觉等，前沿领域"},
+                    {name: "云计算", type: "新兴产业", count: "86项", trend: "↑20%", detail: "公有云、私有云、混合云"},
+                    {name: "大数据", type: "新兴产业", count: "112项", trend: "↑16%", detail: "数据分析、数据可视化等"},
+                    {name: "物联网", type: "新兴产业", count: "95项", trend: "↑14%", detail: "智能硬件、传感器等"},
+                    {name: "量子信息", type: "新兴产业", count: "34项", trend: "↑30%", detail: "量子计算、量子通信等前沿技术"},
+                    {name: "区块链", type: "新兴产业", count: "56项", trend: "↑10%", detail: "数字货币、供应链金融等"},
+                    {name: "卫星导航", type: "新兴产业", count: "45项", trend: "↑12%", detail: "北斗导航、定位服务等"},
+                    {name: "海洋经济", type: "新兴产业", count: "38项", trend: "↑8%", detail: "海洋装备、港口物流等"}
+                ],
+                configLabels: ['产业链指标', '技术指标', '企业指标', '人才指标', '科研指标']
+            },
+            '2': {
+                title: '产业全要素图谱',
+                industry: ['新能源汽车', '高端装备', '绿色环保', '现代服务', '海洋产业'],
+                data: [
+                    {name: "动力电池", type: "核心部件", count: "45项", trend: "↑28%", detail: "三元锂电池、磷酸铁锂技术领先"},
+                    {name: "电机电控", type: "核心部件", count: "38项", trend: "↑22%", detail: "驱动电机、控制系统"},
+                    {name: "充电设施", type: "配套设施", count: "67项", trend: "↑35%", detail: "充电桩、换电站布局"},
+                    {name: "智能网联", type: "新兴技术", count: "52项", trend: "↑40%", detail: "车联网、自动驾驶"},
+                    {name: "车身轻量化", type: "新材料", count: "29项", trend: "↑18%", detail: "碳纤维、铝合金应用"},
+                    {name: "氢燃料电池", type: "新技术", count: "23项", trend: "↑45%", detail: "质子交换膜、电堆技术"},
+                    {name: "动力回收", type: "节能技术", count: "18项", trend: "↑15%", detail: "制动能量回收系统"},
+                    {name: "热管理", type: "关键系统", count: "31项", trend: "↑20%", detail: "电池热管理、空调系统"},
+                    {name: "汽车芯片", type: "核心部件", count: "42项", trend: "↑32%", detail: "MCU、功率半导体"},
+                    {name: "信息安全", type: "新兴领域", count: "27项", trend: "↑38%", detail: "车载安全、隐私保护"},
+                    {name: "激光雷达", type: "传感器", count: "19项", trend: "↑50%", detail: "固态激光雷达技术突破"},
+                    {name: "高精度地图", type: "基础设施", count: "15项", trend: "↑25%", detail: "三维地图、高精定位"},
+                    {name: "车规级芯片", type: "核心部件", count: "33项", trend: "↑30%", detail: "自动驾驶芯片、座舱芯片"},
+                    {name: "功率器件", type: "关键器件", count: "28项", trend: "↑22%", detail: "SiC、GaN器件"},
+                    {name: "电池回收", type: "循环经济", count: "12项", trend: "↑55%", detail: "梯次利用、回收拆解"}
+                ],
+                configLabels: ['产能布局', '技术路线', '供应链', '市场分布', '政策支持']
+            },
+            '3': {
+                title: '产业链深度分析',
+                industry: ['半导体产业链', '生物医药产业链', '高端装备产业链', '新材料产业链'],
+                data: [
+                    {name: "芯片设计", type: "上游", count: "89项", trend: "↑20%", detail: "CPU、GPU、AI芯片设计"},
+                    {name: "晶圆制造", type: "中游", count: "34项", trend: "↑15%", detail: "12英寸、成熟制程"},
+                    {name: "封装测试", type: "下游", count: "56项", trend: "↑12%", detail: "先进封装、测试服务"},
+                    {name: "硅材料", type: "原材料", count: "28项", trend: "↑8%", detail: "多晶硅、单晶硅"},
+                    {name: "光刻机", type: "关键设备", count: "12项", trend: "↑5%", detail: "DUV、EUV技术"},
+                    {name: "刻蚀设备", type: "关键设备", count: "18项", trend: "↑18%", detail: "等离子刻蚀机"},
+                    {name: "沉积设备", type: "关键设备", count: "21项", trend: "↑22%", detail: "CVD、PVD设备"},
+                    {name: "光刻胶", type: "关键材料", count: "15项", trend: "↑25%", detail: "ArF、KrF光刻胶"},
+                    {name: "电子特气", type: "关键材料", count: "22项", trend: "↑10%", detail: "高纯度特种气体"},
+                    {name: "CMP材料", type: "关键材料", count: "11项", trend: "↑15%", detail: "抛光液、抛光垫"},
+                    {name: "溅射靶材", type: "关键材料", count: "9项", trend: "↑12%", detail: "铜靶、铝靶"},
+                    {name: "晶圆载具", type: "配套", count: "14项", trend: "↑8%", detail: "晶圆盒、搬运设备"},
+                    {name: "检测设备", type: "质量控制", count: "25项", trend: "↑28%", detail: "AOI、ATE测试"},
+                    {name: "洁净工程", type: "配套设施", count: "19项", trend: "↑15%", detail: "无尘车间建设"},
+                    {name: "IC设计软件", type: "软件工具", count: "31项", trend: "↑35%", detail: "EDA工具、IP核"}
+                ],
+                configLabels: ['设计环节', '制造环节', '封装测试', '设备材料', '终端应用']
+            },
+            '4': {
+                title: '技术链深度分析',
+                industry: ['人工智能', '量子信息', '集成电路', '生物技术'],
+                data: [
+                    {name: "机器学习", type: "基础算法", count: "156项", trend: "↑30%", detail: "深度学习、强化学习"},
+                    {name: "计算机视觉", type: "应用技术", count: "128项", trend: "↑25%", detail: "图像识别、目标检测"},
+                    {name: "自然语言处理", type: "应用技术", count: "112项", trend: "↑28%", detail: "语义理解、机器翻译"},
+                    {name: "语音识别", type: "应用技术", count: "89项", trend: "↑20%", detail: "ASR、TTS技术"},
+                    {name: "知识图谱", type: "基础设施", count: "67项", trend: "↑35%", detail: "知识表示、推理"},
+                    {name: "量子计算", type: "前沿技术", count: "23项", trend: "↑45%", detail: "量子比特、量子算法"},
+                    {name: "量子通信", type: "前沿技术", count: "18项", trend: "↑38%", detail: "量子密钥分发"},
+                    {name: "区块链", type: "新兴技术", count: "78项", trend: "↑15%", detail: "共识机制、智能合约"},
+                    {name: "边缘计算", type: "基础设施", count: "54项", trend: "↑32%", detail: "端侧AI、IoT"},
+                    {name: "5G通信", type: "基础设施", count: "92项", trend: "↑22%", detail: "毫米波、网络切片"},
+                    {name: "6G预研", type: "前沿技术", count: "15项", trend: "↑60%", detail: "太赫兹、通信AI"},
+                    {name: "脑机接口", type: "前沿技术", count: "8项", trend: "↑55%", detail: "神经调控、意念控制"},
+                    {name: "人形机器人", type: "新兴领域", count: "12项", trend: "↑48%", detail: "仿生设计、运动控制"},
+                    {name: "数字孪生", type: "应用技术", count: "42项", trend: "↑40%", detail: "虚拟仿真、数据同步"},
+                    {name: "隐私计算", type: "安全技术", count: "35项", trend: "↑42%", detail: "联邦学习、同态加密"}
+                ],
+                configLabels: ['基础研究', '核心技术', '应用场景', '产业转化', '标准制定']
+            },
+            '5': {
+                title: '企业深度分析',
+                industry: ['上市公司', '专精特新', '高新技术企业', '科技型中小企业'],
+                data: [
+                    {name: "华为技术", type: "龙头企业", count: "研发投入TOP1", trend: "↑18%", detail: "全球领先ICT解决方案提供商"},
+                    {name: "腾讯科技", type: "龙头企业", count: "专利数TOP2", trend: "↑22%", detail: "互联网科技巨头"},
+                    {name: "比亚迪", type: "龙头企业", count: "新能源车销量TOP1", trend: "↑35%", detail: "新能源汽车全产业链布局"},
+                    {name: "中兴通讯", type: "重点企业", count: "5G专利TOP5", trend: "↑15%", detail: "通信设备制造商"},
+                    {name: "华大基因", type: "重点企业", count: "基因测序TOP1", trend: "↑20%", detail: "生物医药领军企业"},
+                    {name: "大疆创新", type: "独角兽", count: "无人机份额75%", trend: "↑28%", detail: "消费级无人机领导者"},
+                    {name: "优必选", type: "独角兽", count: "机器人专利500+", trend: "↑32%", detail: "人形机器人企业"},
+                    {name: "柔宇科技", type: "独角兽", count: "折叠屏专利TOP3", trend: "↑12%", detail: "柔性显示技术"},
+                    {name: "云天励飞", type: "专精特新", count: "AI算法TOP10", trend: "↑40%", detail: "AI芯片及算法"},
+                    {name: "奥比中光", type: "专精特新", count: "3D视觉TOP5", trend: "↑38%", detail: "3D传感技术"},
+                    {name: "速腾聚创", type: "专精特新", count: "激光雷达TOP3", trend: "↑45%", detail: "自动驾驶传感器"},
+                    {name: "汇顶科技", type: "上市公司", count: "触控芯片TOP1", trend: "↑18%", detail: "半导体设计企业"},
+                    {name: "深信服", type: "上市公司", count: "网络安全TOP10", trend: "↑22%", detail: "云计算及安全"},
+                    {name: "迈瑞医疗", type: "上市公司", count: "医疗器械TOP1", trend: "↑20%", detail: "高端医疗设备"},
+                    {name: "康泰生物", type: "上市公司", count: "疫苗研发TOP5", trend: "↑25%", detail: "生物疫苗"}
+                ],
+                configLabels: ['经营状况', '创新能力', '市场表现', '人才规模', '融资动态']
+            },
+            '6': {
+                title: '科研机构分析',
+                industry: ['高校科研', '研究院所', '企业研发', '创新载体'],
+                data: [
+                    {name: "深圳先进技术研究院", type: "国立科研", count: "论文2000+", trend: "↑25%", detail: "中科院深圳先进技术研究院"},
+                    {name: "南方科技大学", type: "高等院校", count: "Nature/Science 15篇", trend: "↑35%", detail: "双一流建设高校"},
+                    {name: "深圳大学", type: "高等院校", count: "专利授权2000+", trend: "↑20%", detail: "本地高校代表"},
+                    {name: "华为2012实验室", type: "企业研发", count: "研发投入500亿+", trend: "↑18%", detail: "企业最高水平研发"},
+                    {name: "腾讯AI Lab", type: "企业研发", count: "AI论文300+", trend: "↑30%", detail: "人工智能研究"},
+                    {name: "比亚迪工程研究院", type: "企业研发", count: "专利3000+", trend: "↑28%", detail: "新能源汽车研发"},
+                    {name: "鹏城实验室", type: "省级实验室", count: "算力100P+", trend: "↑50%", detail: "网络通信人工智能"},
+                    {name: "深圳华大生命科学研究院", type: "民办非企", count: "基因组数据50Pb", trend: "↑22%", detail: "生命科学研究"},
+                    {name: "深圳市人工智能与机器人研究院", type: "市级实验室", count: "机器人专利200+", trend: "↑40%", detail: "AIRS研究院"},
+                    {name: "香港中文大学(深圳)", type: "中外合作", count: "引进人才300+", trend: "↑32%", detail: "国际化研究型大学"},
+                    {name: "北理工深圳汽车研究院", type: "校企合作", count: "产学研项目50+", trend: "↑28%", detail: "汽车技术转化"},
+                    {name: "深圳技术大学", type: "高等院校", count: "产教融合项目100+", trend: "↑25%", detail: "应用型本科"},
+                    {name: "深圳先进院合成所", type: "国立科研", count: "合成生物项目30+", trend: "↑55%", detail: "合成生物学"},
+                    {name: "深圳计量质量检测研究院", type: "检测机构", count: "检测资质5000+", trend: "↑15%", detail: "质量检测服务"},
+                    {name: "深圳技术转移中心", type: "服务机构", count: "技术成交100亿+", trend: "↑20%", detail: "科技成果转化"}
+                ],
+                configLabels: ['科研实力', '人才梯队', '成果转化', '项目承担', '合作网络']
+            },
+            '7': {
+                title: '人才深度分析',
+                industry: ['科技领军人才', '青年科技人才', '技能人才', '海归人才'],
+                data: [
+                    {name: "院士", type: "顶尖人才", count: "45人", trend: "↑8%", detail: "两院院士数量"},
+                    {name: "长江学者", type: "领军人才", count: "128人", trend: "↑12%", detail: "长江学者特聘教授"},
+                    {name: "千人计划", type: "海归人才", count: "356人", trend: "↑10%", detail: "国家千人计划专家"},
+                    {name: "万人计划", type: "领军人才", count: "234人", trend: "↑15%", detail: "国家万人计划"},
+                    {name: "孔雀计划", type: "地方人才", count: "1200人+", trend: "↑18%", detail: "深圳市人才计划"},
+                    {name: "珠江人才", type: "地方人才", count: "580人", trend: "↑14%", detail: "广东省人才计划"},
+                    {name: "深圳市杰青", type: "青年人才", count: "89人", trend: "↑20%", detail: "优秀青年科学基金"},
+                    {name: "博士后工作站", type: "人才培养", count: "200+", trend: "↑22%", detail: "在站博士后"},
+                    {name: "技能大师", type: "技能人才", count: "56人", trend: "↑10%", detail: "高级技师"},
+                    {name: "首席科学家", type: "研发人才", count: "180人", trend: "↑16%", detail: "企业研发领军"},
+                    {name: "PCT专利发明人", type: "创新人才", count: "320人", trend: "↑25%", detail: "国际专利"},
+                    {name: "高层次人才", type: "综合", count: "2500人+", trend: "↑15%", detail: "各级人才认定"},
+                    {name: "科技新星", type: "青年人才", count: "145人", trend: "↑28%", detail: "青年科技人才"},
+                    {name: "产业教授", type: "产教融合", count: "78人", trend: "↑18%", detail: "企业高校双聘"},
+                    {name: "留学归国人员", type: "海归人才", count: "5000人+", trend: "↑12%", detail: "年度新增"}
+                ],
+                configLabels: ['人才引进', '人才培养', '人才服务', '人才评价', '人才激励']
+            },
+            '8': {
+                title: '政策深度分析',
+                industry: ['产业政策', '人才政策', '科技政策', '金融政策'],
+                data: [
+                    {name: "深圳市科技创新条例", type: "地方法规", count: "2021年发布", trend: "↑新", detail: "深圳科技创新的基本法规"},
+                    {name: "高新技术产业发展", type: "产业规划", count: "十四五规划", trend: "↑重点", detail: "深圳市十四五规划"},
+                    {name: "人才引进办法", type: "人才政策", count: "孔雀计划", trend: "↑升级", detail: "深圳市人才认定"},
+                    {name: "专精特新培育", type: "企业政策", count: "入库企业1000+", trend: "↑新增", detail: "专精特新企业培育"},
+                    {name: "首台(套)政策", type: "产业政策", count: "补贴50%+", trend: "↑支持", detail: "重大装备扶持"},
+                    {name: "研发费用加计扣除", type: "财税政策", count: "最高100%", trend: "↑提高", detail: "企业研发激励"},
+                    {name: "科技金融扶持", type: "金融政策", count: "授信500亿+", trend: "↑增长", detail: "科技企业融资"},
+                    {name: "知识产权保护", type: "法规政策", count: "保护条例", trend: "↑加强", detail: "知识产权强市"},
+                    {name: "科技成果转化", type: "科技政策", count: "转化条例", trend: "↑立法", detail: "科技成果转化法"},
+                    {name: "产业用地政策", type: "产业政策", count: "用地保障", trend: "↑优先", detail: "产业发展空间"},
+                    {name: "税收优惠", type: "财税政策", count: "减免税", trend: "↑扩围", detail: "高新技术企业所得税"},
+                    {name: "股权投资政策", type: "金融政策", count: "引导基金", trend: "↑设立", detail: "政府引导基金"},
+                    {name: "创业扶持政策", type: "创业政策", count: "补贴政策", trend: "↑叠加", detail: "创业担保贷款"},
+                    {name: "产学研政策", type: "科技政策", count: "合作项目", trend: "↑支持", detail: "产学研协同创新"},
+                    {name: "国际合作政策", type: "开放政策", count: "合作渠道", trend: "↑拓展", detail: "国际科技合作"}
+                ],
+                configLabels: ['政策制定', '政策落实', '政策宣传', '政策评估', '政策创新']
+            },
+            '9': {
+                title: '产业服务分析',
+                industry: ['技术服务', '金融服务', '人才服务', '市场服务'],
+                data: [
+                    {name: "检验检测服务", type: "技术服务", count: "机构300+", trend: "↑15%", detail: "产品质量检验检测"},
+                    {name: "计量校准服务", type: "技术服务", count: "机构150+", trend: "↑12%", detail: "计量器具校准"},
+                    {name: "知识产权服务", type: "中介服务", count: "机构200+", trend: "↑20%", detail: "专利申请、商标服务"},
+                    {name: "法律咨询服务", type: "中介服务", count: "机构180+", trend: "↑10%", detail: "科技法律服务"},
+                    {name: "会计审计服务", type: "中介服务", count: "机构250+", trend: "↑8%", detail: "财务审计服务"},
+                    {name: "科技融资担保", type: "金融服务", count: "担保额500亿+", trend: "↑18%", detail: "科技企业担保"},
+                    {name: "创业投资引导", type: "金融服务", count: "基金规模1000亿+", trend: "↑25%", detail: "政府引导基金"},
+                    {name: "科技保险", type: "金融服务", count: "险种50+", trend: "↑22%", detail: "科技保险产品"},
+                    {name: "人才招聘服务", type: "人才服务", count: "平台50+", trend: "↑15%", detail: "科技人才招聘"},
+                    {name: "人才培训服务", type: "人才服务", count: "培训人次10万+", trend: "↑20%", detail: "职业技能培训"},
+                    {name: "人力资源服务", type: "人才服务", count: "机构300+", trend: "↑12%", detail: "猎头、派遣服务"},
+                    {name: "市场推广服务", type: "市场服务", count: "机构100+", trend: "↑18%", detail: "品牌营销推广"},
+                    {name: "展会展览服务", type: "市场服务", count: "展会200+", trend: "↑15%", detail: "科技展会"},
+                    {name: "技术交易服务", type: "市场服务", count: "成交额1000亿+", trend: "↑28%", detail: "技术产权交易"},
+                    {name: "创业孵化服务", type: "创业服务", count: "孵化器200+", trend: "↑22%", detail: "科技企业孵化"}
+                ],
+                configLabels: ['服务规模', '服务质量', '服务效率', '服务创新', '服务生态']
+            },
+            '10': {
+                title: '产业综合分析',
+                industry: ['战略性新兴产业', '未来产业', '传统优势产业', '现代服务业'],
+                data: [
+                    {name: "新一代信息技术", type: "战略性新兴产业", count: "产值1.2万亿", trend: "↑15%", detail: "电子信息、软件服务"},
+                    {name: "高端装备制造", type: "战略性新兴产业", count: "产值8000亿", trend: "↑12%", detail: "机器人、精密制造"},
+                    {name: "生物医药", type: "战略性新兴产业", count: "产值3000亿", trend: "↑18%", detail: "医疗器械、生物制药"},
+                    {name: "新能源", type: "战略性新兴产业", count: "产值5000亿", trend: "↑25%", detail: "光伏、储能、动力电池"},
+                    {name: "新材料", type: "战略性新兴产业", count: "产值2000亿", trend: "↑10%", detail: "先进复合材料"},
+                    {name: "数字经济", type: "未来产业", count: "产值1.5万亿", trend: "↑20%", detail: "数据服务、数字内容"},
+                    {name: "人工智能", type: "未来产业", count: "核心产业1500亿", trend: "↑30%", detail: "AI芯片、算法、应用"},
+                    {name: "集成电路", type: "未来产业", count: "产值1000亿", trend: "↑35%", detail: "设计、制造、封装"},
+                    {name: "海洋经济", type: "未来产业", count: "产值800亿", trend: "↑8%", detail: "海洋装备、港口物流"},
+                    {name: "航空航天", type: "未来产业", count: "产值500亿", trend: "↑22%", detail: "无人机、卫星应用"},
+                    {name: "区块链", type: "未来产业", count: "产值300亿", trend: "↑15%", detail: "底层技术、应用场景"},
+                    {name: "量子信息", type: "未来产业", count: "产值100亿", trend: "↑45%", detail: "量子计算、量子通信"},
+                    {name: "现代金融", type: "现代服务业", count: "增加值5000亿", trend: "↑10%", detail: "科技金融"},
+                    {name: "现代物流", type: "现代服务业", count: "增加值2000亿", trend: "↑8%", detail: "智慧物流"},
+                    {name: "专业服务", type: "现代服务业", count: "增加值1500亿", trend: "↑12%", detail: "法律、会计、咨询"}
+                ],
+                configLabels: ['产业规模', '增长速度', '创新能力', '集群效应', '发展潜力']
+            },
+            'ai': {
+                title: 'AI智能报告',
+                industry: ['智能问答', '报告生成', '数据分析', '知识推理'],
+                data: [
+                    {name: "智能问答系统", type: "AI应用", count: "服务100万+用户", trend: "↑50%", detail: "7x24小时智能客服"},
+                    {name: "自动报告生成", type: "AI应用", count: "生成报告10万+", trend: "↑40%", detail: "一键生成分析报告"},
+                    {name: "智能数据分析", type: "AI能力", count: "处理数据1Pb+", trend: "↑60%", detail: "大数据智能分析"},
+                    {name: "知识图谱推理", type: "AI能力", count: "实体500万+", trend: "↑35%", detail: "知识推理问答"},
+                    {name: "语义理解", type: "AI能力", count: "准确率95%+", trend: "↑15%", detail: "NLU语义分析"},
+                    {name: "情感分析", type: "AI能力", count: "分析维度50+", trend: "↑25%", detail: "舆情监测分析"},
+                    {name: "智能推荐", type: "AI应用", count: "推荐准确率80%+", trend: "↑20%", detail: "个性化推荐"},
+                    {name: "智能写作", type: "AI应用", count: "生成内容100万+", trend: "↑45%", detail: "AI辅助写作"},
+                    {name: "语音合成", type: "AI能力", count: "支持50+语种", trend: "↑30%", detail: "TTS语音合成"},
+                    {name: "机器翻译", type: "AI能力", count: "支持100+语言", trend: "↑28%", detail: "神经机器翻译"},
+                    {name: "图像识别", type: "AI能力", count: "识别准确率98%+", trend: "↑18%", detail: "计算机视觉"},
+                    {name: "视频分析", type: "AI能力", count: "处理视频100万+", trend: "↑35%", detail: "智能视频分析"},
+                    {name: "智能监控", type: "AI应用", count: "接入设备10万+", trend: "↑22%", detail: "智慧城市监控"},
+                    {name: "预测分析", type: "AI能力", count: "预测模型500+", trend: "↑40%", detail: "趋势预测"},
+                    {name: "智能决策", type: "AI能力", count: "决策场景100+", trend: "↑55%", detail: "辅助决策"}
+                ],
+                configLabels: ['问答系统', '报告生成', '知识图谱', '数据分析', '智能推荐']
+            }
+        };
+
+        let currentPageNum = 1;
+        let pageSize = 10;
+        let allData = pageConfigs['1'].data;
+        let totalPages = Math.ceil(allData.length / pageSize);
+        let currentData = allData.slice(0, pageSize);
+        let vizMode = 'force';
+        let currentMenuId = '1';
+
+        function init() {
+            // Delay to ensure DOM is fully loaded
+            setTimeout(function() {
+                renderTable();
+                initViz();
+                initCheckboxListeners();
+                initMenuListeners();
+                console.log('Initialization complete');
+            }, 100);
+        }
+
+        function initCheckboxListeners() {
+            document.querySelectorAll('.checkbox-label').forEach(label => {
+                label.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.classList.toggle('checked');
+                    const checkbox = this.querySelector('input');
+                    if (checkbox) {
+                        checkbox.checked = this.classList.contains('checked');
+                    }
+                });
+            });
+        }
+
+        function initMenuListeners() {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const id = this.dataset.id;
+                    currentMenuId = id;
+                    
+                    // Trigger page animation
+                    const mainContent = document.querySelector('.main-content');
+                    mainContent.style.animation = 'none';
+                    mainContent.offsetHeight; // Trigger reflow
+                    mainContent.style.animation = 'pageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                    
+                    // Handle AI page specially
+                    if (id === 'ai') {
+                        mainContent.classList.add('ai-focused');
+                        document.getElementById('pageTitle').textContent = 'AI智能报告';
+                        return;
+                    } else {
+                        mainContent.classList.remove('ai-focused');
+                    }
+                    
+                    // Load page-specific configuration
+                    const config = pageConfigs[id] || pageConfigs['1'];
+                    
+                    document.getElementById('pageTitle').textContent = config.title;
+                    
+                    // Update industry dropdown options
+                    const industrySelect = document.getElementById('industrySelect');
+                    industrySelect.innerHTML = config.industry.map(ind => `<option>${ind}</option>`).join('');
+                    
+                    // Update data
+                    allData = config.data;
+                    totalPages = Math.ceil(allData.length / pageSize);
+                    currentPageNum = 1;
+                    currentData = allData.slice(0, pageSize);
+                    
+                    // Update checkbox labels
+                    const checkboxGroup = document.getElementById('checkboxGroup');
+                    checkboxGroup.innerHTML = config.configLabels.map((label, i) => `
+                        <label class="checkbox-label ${i < 3 ? 'checked' : ''}">
+                            <span class="checkbox-icon">✓</span> ${label}
+                        </label>
+                    `).join('');
+                    
+                    // Re-attach checkbox listeners
+                    initCheckboxListeners();
+                    
+                    // Re-render table
+                    renderTable();
+                    
+                    // Refresh visualization
+                    initViz();
+                });
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = currentData.map(row => `
+                <tr>
+                    <td class="highlight">${row.name}</td>
+                    <td>${row.type}</td>
+                    <td>${row.count}</td>
+                    <td style="color: var(--primary);">${row.trend}</td>
+                    <td><button class="detail-btn" onclick="showDetail('${row.name}', '${row.detail}')">查看详情</button></td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('totalCount').textContent = allData.length;
+            document.getElementById('totalPages').textContent = totalPages;
+            document.getElementById('currentPage').textContent = currentPageNum;
+            
+            document.getElementById('firstBtn').disabled = currentPageNum === 1;
+            document.getElementById('prevBtn').disabled = currentPageNum === 1;
+            document.getElementById('nextBtn').disabled = currentPageNum === totalPages;
+            document.getElementById('lastBtn').disabled = currentPageNum === totalPages;
+        }
+
+        function changePage(delta, pageNum) {
+            // Handle special actions
+            if (delta === 'first') {
+                currentPageNum = 1;
+            } else if (delta === 'last') {
+                currentPageNum = totalPages;
+            } else if (pageNum) {
+                // Handle page number buttons (1,2,3,4,5)
+                currentPageNum = pageNum;
+            } else if (delta === 999) {
+                currentPageNum = totalPages;
+            } else if (delta === 0) {
+                // Fallback: try to get from event.target
+                const evt = window.event;
+                if (evt && evt.target && evt.target.dataset.page) {
+                    currentPageNum = parseInt(evt.target.dataset.page);
+                }
+            } else {
+                currentPageNum += delta;
+            }
+            
+            // Validate page number
+            if (currentPageNum < 1) currentPageNum = 1;
+            if (currentPageNum > totalPages) currentPageNum = totalPages;
+            
+            const start = (currentPageNum - 1) * pageSize;
+            currentData = allData.slice(start, start + pageSize);
+            
+            renderTable();
+            
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.dataset.page) === currentPageNum) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Add feedback
+            showToast(`📄 已跳转到第 ${currentPageNum} 页`);
+        }
+
+        function showDetail(name, detail) {
+            document.getElementById('modalTitle').textContent = name + ' - 详情分析';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 12px;">基本信息</h4>
+                    <div style="background: var(--bg-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-light);">
+                        <p style="color: var(--text-secondary); margin-bottom: 8px;"><strong style="color: var(--text-primary);">名称：</strong>${name}</p>
+                        <p style="color: var(--text-secondary); margin-bottom: 8px;"><strong style="color: var(--text-primary);">类型：</strong>产业链/新兴产业</p>
+                        <p style="color: var(--text-secondary);"><strong style="color: var(--text-primary);">详细描述：</strong>${detail}</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 12px;">关联指标</h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                        <div style="background: var(--bg-light); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid var(--border-light);">
+                            <div style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">95</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary);">综合评分</div>
+                        </div>
+                        <div style="background: var(--bg-light); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid var(--border-light);">
+                            <div style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">128</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary);">关联企业</div>
+                        </div>
+                        <div style="background: var(--bg-light); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid var(--border-light);">
+                            <div style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">89</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary);">专利数量</div>
+                        </div>
+                        <div style="background: var(--bg-light); padding: 16px; border-radius: 8px; text-align: center; border: 1px solid var(--border-light);">
+                            <div style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">A+</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary);">信用等级</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="closeModal(); addToReport();">📌 铉选到报告</button>
+            `;
+            document.getElementById('detailModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        // Auto-trigger animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to sections on load
+            document.querySelectorAll('.config-panel, .viz-panel, .results-panel').forEach((panel, i) => {
+                panel.style.animationDelay = (i * 0.05) + 's';
+            });
+        });
+
+        function showToast(message) {
+            // Remove existing toast if any
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2500);
+        }
+
+        function addButtonFeedback(btn) {
+            btn.classList.add('btn-clicked');
+            setTimeout(() => btn.classList.remove('btn-clicked'), 200);
+        }
+
+        function runAnalysis(evt) {
+            const btn = (evt && evt.target && evt.target.closest) ? evt.target.closest('.btn') : null;
+            if (btn) addButtonFeedback(btn);
+            
+            const industry = document.getElementById('industrySelect').value;
+            const level = document.getElementById('levelSelect').value;
+            const time = document.getElementById('timeSelect').value;
+            
+            // Get selected checkboxes
+            const selectedCheckboxes = [];
+            document.querySelectorAll('.checkbox-label.checked').forEach(label => {
+                selectedCheckboxes.push(label.textContent.trim());
+            });
+            
+            showToast('🔍 正在执行分析...');
+            
+            setTimeout(() => {
+                showToast('✅ 分析完成！');
+            }, 1500);
+        }
+
+        function addToReport(evt) {
+            const btn = (evt && evt.target && evt.target.closest) ? evt.target.closest('.btn') : null;
+            if (btn) addButtonFeedback(btn);
+            
+            const workspace = document.getElementById('workspaceItems');
+            const empty = workspace.querySelector('.empty-state');
+            if (empty) empty.remove();
+            
+            const pageTitle = document.getElementById('pageTitle').textContent;
+            
+            const item = document.createElement('div');
+            item.className = 'workspace-item';
+            item.innerHTML = `
+                <div class="workspace-item-info">
+                    <span class="workspace-item-name">${pageTitle} - 分析结果</span>
+                    <span class="workspace-item-time">刚刚</span>
+                </div>
+                <button class="detail-btn" onclick="this.parentElement.remove(); showToast('已删除')">删除</button>
+            `;
+            workspace.appendChild(item);
+            
+            showToast('✅ 已添加到报告工作台');
+        }
+
+        function switchVizMode(btn, mode) {
+            document.querySelectorAll('.viz-mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            vizMode = mode;
+            initViz();
+            
+            const modeNames = { force: '力导向图', hierarchy: '层级树', galaxy: '星系图' };
+            showToast(`🔄 已切换到 ${modeNames[mode]}`);
+        }
+
+        function toggleExportMenu() {
+            document.getElementById('exportMenu').classList.toggle('show');
+        }
+
+        function exportData(format) {
+            const formatNames = { csv: 'CSV', xlsx: 'Excel', png: '图片', pdf: 'PDF' };
+            showToast(`📥 正在导出 ${formatNames[format]} 格式...`);
+            document.getElementById('exportMenu').classList.remove('show');
+            
+            setTimeout(() => {
+                showToast('✅ 导出成功！');
+            }, 1200);
+        }
+
+        function initViz() {
+            // Wait for DOM to be ready
+            setTimeout(function() {
+                const canvas = document.getElementById('mainCanvas');
+                if (!canvas) {
+                    console.log('Canvas not found, retrying...');
+                    setTimeout(initViz, 100);
+                    return;
+                }
+                
+                const parent = canvas.parentElement;
+                if (!parent) return;
+                
+                // Set canvas size
+                canvas.width = parent.offsetWidth || 800;
+                canvas.height = parent.offsetHeight || 300;
+                
+                // Hide fallback message
+                parent.style.removeProperty('--viz-loading');
+                
+                // Create or restart visualization
+                if (window.vizInstance) {
+                    window.vizInstance.stop();
+                }
+                
+                window.vizInstance = new Visualization(canvas, vizMode);
+                window.vizInstance.start();
+                
+                console.log('Visualization started');
+            }, 100);
+        }
+
+        class Visualization {
+            constructor(canvas, mode) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.mode = mode;
+                this.nodes = [];
+                this.time = 0;
+                this.animationId = null;
+                this.init();
+            }
+
+            init() {
+                const cx = this.canvas.width / 2;
+                const cy = this.canvas.height / 2;
+                // Blue color palette
+                const colors = ['#1890ff', '#40a9ff', '#69c0ff', '#13c2c2', '#36cfc9', '#73d13d', '#95de64'];
+                
+                if (this.mode === 'force') {
+                    for (let i = 0; i < 25; i++) {
+                        this.nodes.push({
+                            x: cx + (Math.random() - 0.5) * 250,
+                            y: cy + (Math.random() - 0.5) * 200,
+                            vx: (Math.random() - 0.5) * 1.5,
+                            vy: (Math.random() - 0.5) * 1.5,
+                            size: 4 + Math.random() * 6,
+                            color: colors[Math.floor(Math.random() * colors.length)]
+                        });
+                    }
+                } else if (this.mode === 'hierarchy') {
+                    this.nodes.push({x: cx, y: 40, size: 20, color: '#1890ff', level: 0});
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+                        this.nodes.push({
+                            x: cx + Math.cos(angle) * 100,
+                            y: 120 + Math.sin(angle) * 60,
+                            size: 12,
+                            color: colors[i % colors.length],
+                            level: 1
+                        });
+                    }
+                } else {
+                    for (let i = 0; i < 10; i++) {
+                        this.nodes.push({
+                            angle: (i / 10) * Math.PI * 2,
+                            speed: 0.015 + Math.random() * 0.01,
+                            radius: 80 + Math.random() * 40,
+                            size: 8 + Math.random() * 6,
+                            color: colors[i % colors.length]
+                        });
+                    }
+                }
+            }
+
+            stop() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                    this.animationId = null;
+                }
+            }
+
+            start() { 
+                this.stop();
+                this.draw(); 
+            }
+
+            draw() {
+                if (!this.ctx) return;
+                
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.time += 0.02;
+                
+                const cx = this.canvas.width / 2;
+                const cy = this.canvas.height / 2;
+
+                if (this.mode === 'force') {
+                    this.nodes.forEach(n => {
+                        n.x += n.vx;
+                        n.y += n.vy;
+                        if (n.x < n.size || n.x > this.canvas.width - n.size) n.vx *= -1;
+                        if (n.y < n.size || n.y > this.canvas.height - n.size) n.vy *= -1;
+                    });
+
+                    this.nodes.forEach((n1, i) => {
+                        this.nodes.slice(i + 1).forEach(n2 => {
+                            const d = Math.hypot(n1.x - n2.x, n1.y - n2.y);
+                            if (d < 80) {
+                                this.ctx.beginPath();
+                                this.ctx.moveTo(n1.x, n1.y);
+                                this.ctx.lineTo(n2.x, n2.y);
+                                this.ctx.strokeStyle = `rgba(24, 144, 255, ${0.4 - d/200})`;
+                                this.ctx.stroke();
+                            }
+                        });
+                    });
+                } else if (this.mode === 'hierarchy') {
+                    if (this.nodes[0]) {
+                        for (let i = 1; i < this.nodes.length; i++) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.nodes[0].x, this.nodes[0].y);
+                            this.ctx.lineTo(this.nodes[i].x, this.nodes[i].y);
+                            this.ctx.strokeStyle = 'rgba(24, 144, 255, 0.25)';
+                            this.ctx.stroke();
+                        }
+                    }
+                } else {
+                    this.nodes.forEach(n => {
+                        n.angle += n.speed;
+                        n.x = cx + Math.cos(n.angle) * n.radius;
+                        n.y = cy + Math.sin(n.angle) * n.radius;
+                        
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(cx, cy);
+                        this.ctx.lineTo(n.x, n.y);
+                        this.ctx.strokeStyle = 'rgba(24, 144, 255, 0.15)';
+                        this.ctx.stroke();
+                    });
+                }
+
+                this.nodes.forEach(n => {
+                    const x = n.x || n.x;
+                    const y = n.y || n.y;
+                    const size = n.size;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                    const g = this.ctx.createRadialGradient(x, y, 0, x, y, size * 1.5);
+                    g.addColorStop(0, n.color);
+                    g.addColorStop(1, 'rgba(255,255,255,0)');
+                    this.ctx.fillStyle = g;
+                    this.ctx.fill();
+                });
+
+                this.animationId = requestAnimationFrame(() => this.draw());
+            }
+        }
+
+        function setAIQuery(text) {
+            document.getElementById('aiQuery').value = text;
+            showToast('✅ 已填充查询内容');
+        }
+
+        function generateAIReport(evt) {
+            const btn = (evt && evt.target && evt.target.closest) ? evt.target.closest('.btn') : null;
+            if (btn) addButtonFeedback(btn);
+            
+            const input = document.getElementById('aiQuery').value;
+            const result = document.getElementById('aiResult');
+            
+            if (!input) {
+                showToast('⚠️ 请输入查询内容');
+                return;
+            }
+            
+            result.innerHTML = `
+                <div class="ai-result-title">📊 报告生成中 <span class="loading-spinner"></span></div>
+                <div class="ai-result-content">正在分析「${input}」相关数据...</div>
+            `;
+            
+            showToast('🤖 AI正在深度分析...');
+            
+            setTimeout(() => {
+                result.innerHTML = `
+                    <div class="ai-result-title">✅ ${input} - 综合分析报告</div>
+                    <div class="ai-result-content">
+                        <p><strong style="color:var(--text-primary);">一、概述</strong></p>
+                        <p>根据深圳市科技创新服务平台数据分析，该领域共有 <span style="color:var(--primary)">1,245</span> 家相关企业，<span style="color:var(--primary)">328</span> 个科研团队，<span style="color:var(--primary)">89</span> 项核心技术。</p>
+                        <p style="margin-top:12px"><strong style="color:var(--text-primary);">二、产业分析</strong></p>
+                        <p>产业链主要集中在 <span style="color:var(--success)">新一代信息技术</span>、<span style="color:var(--success)">新能源</span>、<span style="color:var(--success)">生物医药</span> 三大领域，形成完整产业生态。</p>
+                        <p style="margin-top:12px"><strong style="color:var(--text-primary);">三、发展建议</strong></p>
+                        <p>1. 加强关键技术攻关，提升自主创新能力<br>
+                        2. 完善产学研合作机制，促进成果转化<br>
+                        3. 加大人才引进力度，优化人才结构</p>
+                        <button class="btn btn-primary" style="margin-top:16px;" onclick="showToast('📥 正在导出PDF...')">📥 导出报告</button>
+                    </div>
+                `;
+                showToast('✅ 报告生成完成！');
+            }, 1500);
+        }
+
+        function clearWorkspace() {
+            const items = document.querySelectorAll('.workspace-item');
+            if (items.length === 0) {
+                showToast('⚠️ 工作台已经是空的');
+                return;
+            }
+            document.getElementById('workspaceItems').innerHTML = '<div class="empty-state">暂无铉选内容，请点击"铉选到报告"添加分析结论</div>';
+            showToast('🗑️ 已清空工作台');
+        }
+
+        function generateWorkspaceReport(evt) {
+            const btn = (evt && evt.target && evt.target.closest) ? evt.target.closest('.btn') : null;
+            if (btn) addButtonFeedback(btn);
+            
+            const items = document.querySelectorAll('.workspace-item');
+            if (items.length === 0) {
+                showToast('⚠️ 请先添加分析结论到报告工作台！');
+                return;
+            }
+            showToast('🤖 正在整合分析结论...');
+            
+            setTimeout(() => {
+                showToast('✅ 综合报告生成完成！');
+            }, 1500);
+        }
+
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.export-dropdown')) {
+                document.getElementById('exportMenu').classList.remove('show');
+            }
+            if (e.target.id === 'detailModal') {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        window.addEventListener('resize', function() {
+            setTimeout(initViz, 200);
+        });
+
+        // Ensure init runs
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+        
+        // Fallback
+        setTimeout(init, 500);
+    </script>
+</body>
+</html>
