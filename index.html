@@ -1091,7 +1091,35 @@
             .left-panel { width: 100%; }
             .config-grid { grid-template-columns: 1fr; }
         }
-    </style>
+    
+        /* 子菜单样式 */
+        .submenu {
+            display: none;
+            padding-left: 0;
+            background: var(--bg-light);
+        }
+
+        .submenu.show {
+            display: block;
+        }
+
+        .submenu .menu-item {
+            padding: 10px 20px 10px 50px;
+            font-size: 0.8rem;
+        }
+
+        .menu-item.expandable::after {
+            content: "▾";
+            margin-left: auto;
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item.expandable.expanded::after {
+            transform: rotate(180deg);
+        }
+
+</style>
 </head>
 <body>
     <div class="sidebar">
@@ -1110,9 +1138,63 @@
             <span class="menu-item-icon">🕸</span>
             <span class="menu-item-text">产业全要素图谱</span>
         </div>
-        <div class="menu-item" data-id="3">
+        <div class="menu-item expandable expanded" data-id="3" onclick="toggleSubmenu(this)">
             <span class="menu-item-icon">⚖️</span>
             <span class="menu-item-text">产业链深度分析</span>
+        </div>
+        <div class="submenu show" id="submenu-3">
+            <div class="menu-item" data-id="ic1" onclick="loadIndustrialChainModule('ic1')">
+                <span class="menu-item-icon">🗺</span>
+                <span class="menu-item-text">产业链全景模型</span>
+            </div>
+            <div class="menu-item" data-id="ic2" onclick="loadIndustrialChainModule('ic2')">
+                <span class="menu-item-icon">🏙</span>
+                <span class="menu-item-text">深圳产业链模型</span>
+            </div>
+            <div class="menu-item" data-id="ic3" onclick="loadIndustrialChainModule('ic3')">
+                <span class="menu-item-icon">📅</span>
+                <span class="menu-item-text">产业发展路线历程模型</span>
+            </div>
+            <div class="menu-item" data-id="ic4" onclick="loadIndustrialChainModule('ic4')">
+                <span class="menu-item-icon">🔥</span>
+                <span class="menu-item-text">产业热点领域识别模型</span>
+            </div>
+            <div class="menu-item" data-id="ic5" onclick="loadIndustrialChainModule('ic5')">
+                <span class="menu-item-icon">🏆</span>
+                <span class="menu-item-text">深圳产业优势识别模型</span>
+            </div>
+            <div class="menu-item" data-id="ic6" onclick="loadIndustrialChainModule('ic6')">
+                <span class="menu-item-icon">🔄</span>
+                <span class="menu-item-text">产业周期分析模型</span>
+            </div>
+            <div class="menu-item" data-id="ic7" onclick="loadIndustrialChainModule('ic7')">
+                <span class="menu-item-icon">📊</span>
+                <span class="menu-item-text">产业阶段分析模型</span>
+            </div>
+            <div class="menu-item" data-id="ic8" onclick="loadIndustrialChainModule('ic8')">
+                <span class="menu-item-icon">🔗</span>
+                <span class="menu-item-text">产业链关键环节识别模型</span>
+            </div>
+            <div class="menu-item" data-id="ic9" onclick="loadIndustrialChainModule('ic9')">
+                <span class="menu-item-icon">🚧</span>
+                <span class="menu-item-text">产业瓶颈堵点识别模型</span>
+            </div>
+            <div class="menu-item" data-id="ic10" onclick="loadIndustrialChainModule('ic10')">
+                <span class="menu-item-icon">📈</span>
+                <span class="menu-item-text">区域产业指数模型</span>
+            </div>
+            <div class="menu-item" data-id="ic11" onclick="loadIndustrialChainModule('ic11')">
+                <span class="menu-item-icon">⚠️</span>
+                <span class="menu-item-text">深圳问题识别模型</span>
+            </div>
+            <div class="menu-item" data-id="ic12" onclick="loadIndustrialChainModule('ic12')">
+                <span class="menu-item-icon">🌟</span>
+                <span class="menu-item-text">深圳机遇分析模型</span>
+            </div>
+            <div class="menu-item" data-id="ic13" onclick="loadIndustrialChainModule('ic13')">
+                <span class="menu-item-icon">🎯</span>
+                <span class="menu-item-text">重点布局产业推荐模型</span>
+            </div>
         </div>
         <div class="menu-item" data-id="4">
             <span class="menu-item-icon">🔬</span>
@@ -1204,11 +1286,11 @@
                         </div>
                     </div>
                     <div class="checkbox-group" id="checkboxGroup">
-                        <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 产业链指标</label>
-                        <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 技术指标</label>
-                        <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 企业指标</label>
-                        <label class="checkbox-label"><span class="checkbox-icon">✓</span> 人才指标</label>
-                        <label class="checkbox-label"><span class="checkbox-icon">✓</span> 科研指标</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 产业链指标</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 技术指标</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业指标</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 人才指标</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 科研指标</label>
                     </div>
                     <div class="btn-row">
                         <button class="btn btn-primary" onclick="runAnalysis(event)">
@@ -1312,6 +1394,198 @@
 
     <script>
         // Page-specific data configurations
+        
+        // 产业链深度分析模型配置
+        const industrialChainConfigs = {
+            'ic1': {
+                title: '产业链全景模型',
+                subtitle: '展示某一产业或细分产业的全链条布局',
+                industry: ['新一代信息技术', '半导体', '生物医药', '新能源汽车', '人工智能'],
+                vizType: 'tree',
+                data: [
+                    {name: "基础材料", level: "上游", type: "原材料", children: ["硅材料", "稀土材料", "高分子材料"], value: "128家企业"},
+                    {name: "核心元器件", level: "上游", type: "零部件", children: ["芯片", "传感器", "显示屏"], value: "256家企业"},
+                    {name: "设备制造", level: "中游", type: "生产制造", children: ["通信设备", "终端设备", "服务器"], value: "345家企业"},
+                    {name: "系统集成", level: "中游", type: "系统集成", children: ["软件开发", "系统集成", "解决方案"], value: "412家企业"},
+                    {name: "应用服务", level: "下游", type: "服务应用", children: ["云服务", "数据服务", "应用软件"], value: "523家企业"},
+                    {name: "市场渠道", level: "下游", type: "渠道销售", children: ["分销渠道", "电商平台", "零售终端"], value: "234家企业"},
+                    {name: "物流配送", level: "配套", type: "物流服务", children: ["仓储服务", "配送网络", "供应链管理"], value: "167家企业"},
+                    {name: "技术服务", level: "配套", type: "技术服务", children: ["技术咨询", "运维服务", "培训服务"], value: "189家企业"}
+                ],
+                configLabels: ['上游环节', '中游环节', '下游环节', '配套服务', '关联产业']
+            },
+            'ic2': {
+                title: '深圳产业链模型',
+                subtitle: '展示深圳区域内产业的全链条节点及对应属性',
+                industry: ['深圳半导体', '深圳新能源', '深圳生物医药', '深圳AI'],
+                vizType: 'table',
+                data: [
+                    {name: "南山区", type: "产业聚集区", enterprise: "156家", research: "32家", talent: "3456人", highlight: "核心区域"},
+                    {name: "福田区", type: "产业聚集区", enterprise: "89家", research: "18家", talent: "2134人", highlight: "重点区域"},
+                    {name: "宝安区", type: "产业聚集区", enterprise: "123家", research: "15家", talent: "2890人", highlight: "重点区域"},
+                    {name: "龙岗区", type: "产业聚集区", enterprise: "78家", research: "12家", talent: "1678人", highlight: "发展区域"},
+                    {name: "龙华区", type: "产业聚集区", enterprise: "56家", research: "8家", talent: "1234人", highlight: "潜力区域"},
+                    {name: "坪山区", type: "产业聚集区", enterprise: "45家", research: "6家", talent: "987人", highlight: "特色区域"}
+                ],
+                configLabels: ['龙头企业', '中小企业', '科研机构', '产业园区', '配套企业']
+            },
+            'ic3': {
+                title: '产业发展路线历程模型',
+                subtitle: '识别与呈现产业发展过程中的重大事件',
+                industry: ['半导体产业', '新能源产业', '人工智能产业'],
+                vizType: 'timeline',
+                data: [
+                    {year: "2019", event: "国家大基金二期成立", type: "政策事件", impact: "重大", description: "注册资本2041.5亿元，重点投资集成电路产业"},
+                    {year: "2020", event: "中芯国际科创板上市", type: "企业动态", impact: "重大", description: "融资532亿元，创A股记录"},
+                    {year: "2021", event: "华为宣布全面进入半导体", type: "企业动态", impact: "重大", description: "成立半导体子公司，加大研发投入"},
+                    {year: "2022", event: "深圳发布半导体产业规划", type: "政策事件", impact: "重大", description: "目标打造全球半导体产业高地"},
+                    {year: "2023", event: "3nm工艺量产", type: "技术突破", impact: "重大", description: "台积电实现3nm工艺量产"},
+                    {year: "2024", event: "国产光刻机突破", type: "技术突破", impact: "重大", description: "国产28nm光刻机研发成功"}
+                ],
+                configLabels: ['政策事件', '技术突破', '市场事件', '企业动态', '国际事件']
+            },
+            'ic4': {
+                title: '产业热点领域识别模型',
+                subtitle: '自动识别产业热点领域及趋势',
+                industry: ['科技热点', '市场热点', '政策热点'],
+                vizType: 'heatmap',
+                data: [
+                    {name: "生成式AI", heat: 95, trend: "↑45%", news: 1256, investment: "500亿", desc: "大模型驱动AI新浪潮"},
+                    {name: "新能源汽车", heat: 92, trend: "↑35%", news: 987, investment: "800亿", desc: "电动化智能化持续加速"},
+                    {name: "半导体", heat: 88, trend: "↑28%", news: 756, investment: "600亿", desc: "国产化替代加速推进"},
+                    {name: "量子信息", heat: 85, trend: "↑50%", news: 432, investment: "300亿", desc: "前沿技术加速布局"},
+                    {name: "生物医药", heat: 82, trend: "↑22%", news: 654, investment: "400亿", desc: "创新药研发活跃"},
+                    {name: "数字经济", heat: 80, trend: "↑30%", news: 876, investment: "450亿", desc: "数字产业化加速"}
+                ],
+                configLabels: ['技术创新', '市场关注', '资本动向', '政策支持', '媒体报道']
+            },
+            'ic5': {
+                title: '深圳产业优势识别模型',
+                subtitle: '识别深圳具有竞争力与发展优势的产业领域',
+                industry: ['技术创新', '市场优势', '人才优势'],
+                vizType: 'radar',
+                data: [
+                    {name: "新一代信息技术", rank: 2, score: 92.5, national_avg: 78.3, advantage: "领先", indicators: ["创新指数TOP3", "专利数TOP2", "研发投入TOP3"]},
+                    {name: "新能源汽车", rank: 1, score: 95.8, national_avg: 76.2, advantage: "显著领先", indicators: ["产业链完整", "企业实力强", "市场份额大"]},
+                    {name: "人工智能", rank: 3, score: 88.9, national_avg: 75.1, advantage: "领先", indicators: ["应用场景丰富", "企业集聚", "人才密集"]},
+                    {name: "生物医药", rank: 4, score: 86.2, national_avg: 72.8, advantage: "优势", indicators: ["创新能力强", "产业链完整", "政策支持"]},
+                    {name: "半导体", rank: 5, score: 84.7, national_avg: 71.5, advantage: "优势", indicators: ["设计能力强", "制造能力提升", "产业链完整"]}
+                ],
+                configLabels: ['创新指数', '专利数量', '研发投入', '技术转化', '标准制定']
+            },
+            'ic6': {
+                title: '产业周期分析模型',
+                subtitle: '识别产业所处周期位置及预测发展趋势',
+                industry: ['成长期产业', '成熟期产业', '起步期产业'],
+                vizType: 'table',
+                data: [
+                    {name: "人工智能", cycle: "成长期", stage: "快速成长", market: "8500亿", growth: "35%", profit: "18%", trend: "继续上升", future: "成熟期"},
+                    {name: "量子信息", cycle: "起步期", stage: "萌芽发展", market: "120亿", growth: "50%", profit: "12%", trend: "快速增长", future: "成长期"},
+                    {name: "集成电路", cycle: "成长期", stage: "高速发展", market: "12000亿", growth: "18%", profit: "15%", trend: "稳步上升", future: "成熟期"},
+                    {name: "新能源汽车", cycle: "成长期", stage: "快速发展", market: "6500亿", growth: "30%", profit: "12%", trend: "继续上升", future: "成熟期"},
+                    {name: "生物医药", cycle: "成熟期", stage: "稳定发展", market: "18000亿", growth: "12%", profit: "20%", trend: "平稳增长", future: "成熟期"}
+                ],
+                configLabels: ['市场规模', '增长率', '利润率', '竞争度', '投资热度']
+            },
+            'ic7': {
+                title: '产业阶段分析模型',
+                subtitle: '判断产业所处的发展阶段',
+                industry: ['萌芽期', '成长期', '成熟期'],
+                vizType: 'stage',
+                data: [
+                    {name: "量子计算", stage: "萌芽期", maturity: 25, market: 15, enterprise: 20, features: ["技术不成熟", "市场小", "投入大", "风险高"], suggestions: "加大研发投入，培育市场"},
+                    {name: "生成式AI", stage: "成长期", maturity: 75, market: 70, enterprise: 80, features: ["技术成熟", "市场快速增长", "企业活跃", "应用丰富"], suggestions: "加快应用落地，完善产业生态"},
+                    {name: "集成电路", stage: "成熟期", maturity: 90, market: 85, enterprise: 88, features: ["技术成熟", "市场稳定", "竞争激烈", "利润稳定"], suggestions: "加强创新，提升竞争力"},
+                    {name: "新能源汽车", stage: "成长期", maturity: 80, market: 75, enterprise: 82, features: ["技术成熟", "市场快速增长", "产业链完整", "政策支持"], suggestions: "扩大产能，拓展市场"},
+                    {name: "生物医药", stage: "成熟期", maturity: 88, market: 82, enterprise: 85, features: ["技术成熟", "市场稳定", "研发投入大", "监管严格"], suggestions: "加大创新研发，拓展国际市场"}
+                ],
+                configLabels: ['技术指标', '市场指标', '企业指标', '政策指标', '环境指标']
+            },
+            'ic8': {
+                title: '产业链关键环节识别模型',
+                subtitle: '识别产业链中起核心作用的关键节点',
+                industry: ['芯片设计', '晶圆制造', '封装测试'],
+                vizType: 'table',
+                data: [
+                    {name: "EUV光刻机", importance: 98, innovation: 95, market_share: "ASML垄断", value: "关键设备", status: "严重依赖进口", suggestion: "加大国产化研发"},
+                    {name: "EDA工具", importance: 95, innovation: 90, market_share: "美企垄断", value: "核心软件", status: "严重依赖进口", suggestion: "培育国产EDA企业"},
+                    {name: "光刻胶", importance: 92, innovation: 88, market_share: "日企主导", value: "关键材料", status: "高度依赖", suggestion: "突破高端光刻胶技术"},
+                    {name: "大硅片", importance: 90, innovation: 85, market_share: "日德领先", value: "基础材料", status: "部分依赖", suggestion: "提升大尺寸硅片产能"},
+                    {name: "刻蚀设备", importance: 92, innovation: 88, market_share: "中微北方", value: "关键设备", status: "部分国产", suggestion: "加快刻蚀设备国产化"}
+                ],
+                configLabels: ['创新能力', '企业规模', '附加值', '市场份额', '战略意义']
+            },
+            'ic9': {
+                title: '产业瓶颈堵点识别模型',
+                subtitle: '识别制约产业发展的主要瓶颈堵点',
+                industry: ['技术瓶颈', '人才瓶颈', '资金瓶颈'],
+                vizType: 'bottleneck',
+                data: [
+                    {type: "技术瓶颈", name: "EUV光刻机", severity: "严重", description: "无法自主制造EUV光刻机，制约先进制程发展", solution: "加大研发投入，突破核心技术"},
+                    {type: "技术瓶颈", name: "高端EDA工具", severity: "严重", description: "高端EDA工具被国外垄断，设计受限", solution: "培育国产EDA工具，突破技术封锁"},
+                    {type: "人才瓶颈", name: "高端芯片设计人才", severity: "严重", description: "高端设计人才缺口大，影响产业发展", solution: "加强人才培养和引进"},
+                    {type: "资金瓶颈", name: "研发投入不足", severity: "中等", description: "中小企业研发资金短缺，创新能力受限", solution: "加大政府资金支持，完善融资体系"},
+                    {type: "市场瓶颈", name: "国产芯片接受度低", severity: "中等", description: "国产芯片市场接受度不高，推广应用困难", solution: "加强国产芯片验证和推广"}
+                ],
+                configLabels: ['技术瓶颈', '人才瓶颈', '市场瓶颈', '资金瓶颈', '政策瓶颈']
+            },
+            'ic10': {
+                title: '区域产业指数模型',
+                subtitle: '量化评估区域产业发展水平与竞争力',
+                industry: ['深圳', '北京', '上海', '广州'],
+                vizType: 'table',
+                data: [
+                    {region: "深圳", enterprise: 92.5, academic: 88.3, supporting: 90.7, total: 90.5, rank: 1, trend: "+2.3%"},
+                    {region: "北京", enterprise: 90.8, academic: 95.2, supporting: 87.5, total: 91.2, rank: 1, trend: "+1.8%"},
+                    {region: "上海", enterprise: 89.6, academic: 91.8, supporting: 92.3, total: 91.2, rank: 1, trend: "+2.1%"},
+                    {region: "广州", enterprise: 82.3, academic: 84.6, supporting: 85.2, total: 84.0, rank: 5, trend: "+1.5%"},
+                    {region: "杭州", enterprise: 85.7, academic: 82.4, supporting: 86.8, total: 85.0, rank: 4, trend: "+3.2%"}
+                ],
+                configLabels: ['企业竞争力', '学术生态竞争力', '配套生态竞争力', '创新环境', '政策支持']
+            },
+            'ic11': {
+                title: '深圳问题识别模型',
+                subtitle: '识别深圳产业存在的结构性问题或发展短板',
+                industry: ['创新能力', '产业结构', '人才问题'],
+                vizType: 'issue',
+                data: [
+                    {type: "技术创新", name: "核心技术受制于人", severity: "严重", description: "高端芯片、核心软件等关键技术依赖进口", comparison: "低于全国平均水平", suggestion: "加大核心技术研发投入"},
+                    {type: "产业结构", name: "产业链不完整", severity: "严重", description: "部分产业链关键环节缺失，产业协同性差", comparison: "低于一线城市", suggestion: "完善产业链布局"},
+                    {type: "人才问题", name: "高端人才短缺", severity: "严重", description: "顶尖科学家、技术领军人才相对不足", comparison: "低于北京上海", suggestion: "加强高端人才引进"},
+                    {type: "融资环境", name: "中小企业融资难", severity: "中等", description: "科技型中小企业融资渠道有限", comparison: "与全国持平", suggestion: "完善科技金融服务"}
+                ],
+                configLabels: ['技术创新', '产业结构', '人才结构', '融资环境', '政策环境']
+            },
+            'ic12': {
+                title: '深圳机遇分析模型',
+                subtitle: '基于优势与问题分析，挖掘潜在增长点与机遇',
+                industry: ['技术机遇', '市场机遇', '政策机遇'],
+                vizType: 'opportunity',
+                data: [
+                    {type: "技术机遇", name: "生成式AI应用", potential: "极高", description: "大模型推动AI应用爆发式增长", timeline: "2-3年", recommendation: "大力布局AI应用产业", advantage: "AI基础好，应用场景丰富"},
+                    {type: "市场机遇", name: "新能源汽车出海", potential: "极高", description: "新能源汽车出海需求旺盛", timeline: "3-5年", recommendation: "支持新能源汽车企业出海", advantage: "产业链完整，企业实力强"},
+                    {type: "政策机遇", name: "大湾区建设", potential: "高", description: "粤港澳大湾区建设带来新机遇", timeline: "5-10年", recommendation: "积极参与大湾区建设", advantage: "区位优势明显，政策支持力度大"},
+                    {type: "转型机遇", name: "数字产业升级", potential: "高", description: "数字化转型带来巨大市场机遇", timeline: "3-5年", recommendation: "推动传统产业数字化转型", advantage: "数字产业基础好"}
+                ],
+                configLabels: ['技术创新', '市场拓展', '政策红利', '产业转型', '国际合作']
+            },
+            'ic13': {
+                title: '重点布局产业推荐模型',
+                subtitle: '基于优势与问题分析，推荐重点布局产业',
+                industry: ['战略性新兴', '未来产业', '传统优势'],
+                vizType: 'recommend',
+                data: [
+                    {rank: 1, name: "人工智能", score: 95.8, category: "战略性新兴", growth: "35%", innovation: 92, strategic: 98, fit: 95, suggestion: "加大投入，抢占先机", reason: "技术基础好，应用场景丰富"},
+                    {rank: 2, name: "新能源", score: 94.3, category: "战略性新兴", growth: "30%", innovation: 88, strategic: 95, fit: 98, suggestion: "扩大规模，完善产业链", reason: "产业基础好，市场潜力大"},
+                    {rank: 3, name: "半导体", score: 92.7, category: "战略性新兴", growth: "20%", innovation: 90, strategic: 98, fit: 92, suggestion: "突破核心技术，提升竞争力", reason: "战略意义重大，产业基础较好"},
+                    {rank: 4, name: "量子信息", score: 89.5, category: "未来产业", growth: "50%", innovation: 85, strategic: 95, fit: 88, suggestion: "提前布局，抢占制高点", reason: "前瞻性强，战略意义重大"},
+                    {rank: 5, name: "生物医药", score: 88.9, category: "战略性新兴", growth: "18%", innovation: 87, strategic: 92, fit: 90, suggestion: "加大研发，提升竞争力", reason: "产业基础好，创新能力强"}
+                ],
+                configLabels: ['产业规模', '增长潜力', '创新能力', '战略价值', '区域适配度']
+            }
+        };
+
+
         const pageConfigs = {
             '1': {
                 title: '基础指标分析模型',
@@ -1563,6 +1837,963 @@
         let totalPages = Math.ceil(allData.length / pageSize);
         let currentData = allData.slice(0, pageSize);
         let currentMenuId = '1';
+let isIndustrialChainModule = false;
+let currentIndustrialChainModuleId = '';
+
+        
+        // 子菜单展开/收起功能
+        function toggleSubmenu(menuItem) {
+            menuItem.classList.toggle('expanded');
+            const dataId = menuItem.dataset.id;
+            const submenu = document.getElementById('submenu-' + dataId);
+            if (submenu) {
+                submenu.classList.toggle('show');
+            }
+        }
+
+        // 加载产业链深度分析模块
+        function loadIndustrialChainModule(moduleId) {
+    const config = industrialChainConfigs[moduleId];
+    if (!config) return;
+
+    // 标记当前为产业链深度分析模块
+    isIndustrialChainModule = true;
+    currentIndustrialChainModuleId = moduleId;
+
+    // 更新菜单激活状态
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeItem = document.querySelector('[data-id="' + moduleId + '"');
+    if (activeItem) {
+        activeItem.classList.add('active');
+    }
+
+    // 更新页面标题
+    document.getElementById('pageTitle').textContent = config.title;
+
+    // 显示可视化面板，隐藏结果面板
+    const vizPanel = document.querySelector('.viz-panel');
+    const resultsPanel = document.querySelector('.results-panel');
+    if (vizPanel) vizPanel.style.display = 'block';
+    if (resultsPanel) resultsPanel.style.display = 'none';
+
+    // 生成动态输入字段
+    generateDynamicInputs(moduleId);
+    
+    // 渲染可视化
+    renderIndustrialChainVisualization(document.querySelector('.right-panel'));
+}
+
+// 为每个功能生成独特的输入字段
+function generateDynamicInputs(moduleId) {
+    const configPanel = document.querySelector('.config-panel');
+    if (!configPanel) return;
+
+    let inputHTML = '';
+    
+    switch(moduleId) {
+        case 'ic1': // 产业链全景模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>选择产业</label>
+                    <select id="ic1-industry">
+                        <option>新一代信息技术</option>
+                        <option>半导体</option>
+                        <option>生物医药</option>
+                        <option>新能源汽车</option>
+                        <option>人工智能</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>展示层级</label>
+                    <select id="ic1-level">
+                        <option>产业链</option>
+                        <option>子产业链</option>
+                        <option>细分领域</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>数据源选择</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业信息</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 技术数据</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 人才数据</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 科研机构</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 服务机构</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 供应链数据</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 市场数据</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 行业数据</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>产业链环节</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 上游环节</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 中游环节</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 下游环节</label>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'ic2': // 深圳产业链模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>深圳产业</label>
+                    <select id="ic2-industry">
+                        <option>深圳半导体</option>
+                        <option>深圳新能源</option>
+                        <option>深圳生物医药</option>
+                        <option>深圳AI</option>
+                        <option>深圳新材料</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>区域选择</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 南山区</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 福田区</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 宝安区</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 龙岗区</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 龙华区</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 坪山区</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 光明区</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>主体类型</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 科研机构</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 人才</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 服务机构</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>显示属性</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业数量</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 科研机构数量</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 人才数量</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 产业产值</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 研发投入</label>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'ic3': // 产业发展路线历程模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic3-industry">
+                        <option>半导体产业</option>
+                        <option>新能源产业</option>
+                        <option>人工智能产业</option>
+                        <option>生物医药产业</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>时间跨度</label>
+                    <select id="ic3-timespan">
+                        <option>近1年</option>
+                        <option>近3年</option>
+                        <option selected>近5年</option>
+                        <option>近10年</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>数据源</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 行业统计数据</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 政策法规</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 专家观点</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 新闻报道</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>事件类型</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 政策事件</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 技术突破</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业动态</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 市场事件</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 国际事件</label>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'ic4': // 产业热点领域识别模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic4-industry">
+                        <option>新一代信息技术</option>
+                        <option>半导体</option>
+                        <option>生物医药</option>
+                        <option>新能源</option>
+                        <option>人工智能</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>数据源</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 新闻报道</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 行业研究报告</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 公司公告</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>时间周期</label>
+                    <select id="ic4-time">
+                        <option>本周</option>
+                        <option selected>本月</option>
+                        <option>本季度</option>
+                        <option>本年度</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>热点指标</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 市场份额</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 行业增长率</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 竞争格局</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 投资热度</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 政策支持</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>热度阈值</label>
+                    <select id="ic4-threshold">
+                        <option>>=90分（高热度）</option>
+                        <option selected>>=80分（中热度）</option>
+                        <option>>=70分（低热度）</option>
+                    </select>
+                </div>
+            `;
+            break;
+            
+
+        case 'ic5': // 深圳产业优势识别模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic5-industry">
+                        <option>新一代信息技术</option>
+                        <option>半导体</option>
+                        <option>生物医药</option>
+                        <option>新能源</option>
+                        <option>人工智能</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>评价维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 行业增长率</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 市场占有率</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 技术创新能力</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 企业规模</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 投资活跃度</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>对比范围</label>
+                    <select id="ic5-scope">
+                        <option selected>对比全国</option>
+                        <option>对比一线城市</option>
+                        <option>对比同类城市</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>权重设置</label>
+                    <select id="ic5-weight">
+                        <option selected>均衡权重</option>
+                        <option>增长导向</option>
+                        <option>创新导向</option>
+                        <option>市场导向</option>
+                    </select>
+                </div>
+            `;
+            break;
+
+        case 'ic6': // 产业周期分析模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic6-industry">
+                        <option>人工智能</option>
+                        <option>量子信息</option>
+                        <option>集成电路</option>
+                        <option>新能源汽车</option>
+                        <option>生物医药</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>分析指标</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 市场规模</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 行业增长率</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 利润率</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 竞争激烈度</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>预测周期</label>
+                    <select id="ic6-period">
+                        <option>1年</option>
+                        <option selected>3年</option>
+                        <option>5年</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>周期阶段</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 起始期</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 成长期</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 成熟期</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 衰退期</label>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'ic7': // 产业阶段分析模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic7-industry">
+                        <option>量子计算</option>
+                        <option>生成式AI</option>
+                        <option>集成电路</option>
+                        <option>新能源汽车</option>
+                        <option>生物医药</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>关键指标</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 生产能力</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 销售规模</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 市场份额</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 利润率</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>数据源</label>
+                    <select id="ic7-source">
+                        <option>政策法规数据库</option>
+                        <option selected>行业统计数据</option>
+                        <option>企业财报</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>权重设置</label>
+                    <select id="ic7-weight">
+                        <option selected>均衡权重</option>
+                        <option>生产导向</option>
+                        <option>市场导向</option>
+                        <option>利润导向</option>
+                    </select>
+                </div>
+            `;
+            break;
+
+        case 'ic8': // 产业链关键环节识别模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>产业链环节</label>
+                    <select id="ic8-link">
+                        <option>芯片设计</option>
+                        <option>晶圆制造</option>
+                        <option>封装测试</option>
+                        <option selected>关键材料</option>
+                        <option selected>关键设备</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>核心维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 产业创新能力</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业规模</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 产业附加值</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 市场份额</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 战略重要性</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>权重设置</label>
+                    <select id="ic8-weight">
+                        <option>均衡权重</option>
+                        <option selected>创新导向</option>
+                        <option>规模导向</option>
+                        <option>价值导向</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>重要性阈值</label>
+                    <select id="ic8-threshold">
+                        <option selected>>=90分（非常重要）</option>
+                        <option>>=80分（重要）</option>
+                        <option>>=70分（一般）</option>
+                    </select>
+                </div>
+            `;
+            break;
+
+        case 'ic9': // 产业瓶颈堵点识别模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic9-industry">
+                        <option selected>半导体</option>
+                        <option>生物医药</option>
+                        <option>新能源</option>
+                        <option>人工智能</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>瓶颈维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 技术瓶颈</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 人才瓶颈</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 市场瓶颈</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 资金瓶颈</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 政策瓶颈</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>数据源</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 政策法规</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 市场调研</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 专家访谈</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 行业分析</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>严重程度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 严重</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 中等</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 轻微</label>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'ic10': // 区域产业指数模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>评估区域</label>
+                    <select id="ic10-region">
+                        <option selected>深圳</option>
+                        <option>北京</option>
+                        <option>上海</option>
+                        <option>广州</option>
+                        <option>杭州</option>
+                        <option>成都</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>对比城市</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 北京</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 上海</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 广州</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 杭州</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 成都</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 武汉</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 苏州</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>评价维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业竞争力</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 学术生态竞争力</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 配套生态竞争力</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 创新环境</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 政策支持</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>时间周期</label>
+                    <select id="ic10-period">
+                        <option selected>2024年</option>
+                        <option>2023年</option>
+                        <option>近3年变化</option>
+                    </select>
+                </div>
+            `;
+            break;
+
+        case 'ic11': // 深圳问题识别模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic11-industry">
+                        <option>新一代信息技术</option>
+                        <option selected>半导体</option>
+                        <option>生物医药</option>
+                        <option>新能源</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>负面指标</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业亏损率</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 环保违规次数</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 行业不合格率</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 研发投入不足</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 人才流失率</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>数据源</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 政策法规</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 新闻舆情</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业财务</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 市场调研</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>对比基准</label>
+                    <select id="ic11-baseline">
+                        <option selected>对比全国</option>
+                        <option>对比一线城市</option>
+                    </select>
+                </div>
+            `;
+            break;
+
+        case 'ic12': // 深圳机遇分析模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>机遇类型</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 技术机遇</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 市场机遇</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 政策机遇</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 转型机遇</label>
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>发展阶段</label>
+                    <select id="ic12-stage">
+                        <option>短期机遇</option>
+                        <option selected>中期机遇</option>
+                        <option>长期机遇</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>推荐度</label>
+                    <select id="ic12-priority">
+                        <option selected>高推荐</option>
+                        <option>中推荐</option>
+                        <option>一般推荐</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>整合维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 产业优势分析结果</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 发展问题识别结果</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 专家策略配置</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">v</span> 机器学习模型参数</label>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'ic13': // 重点布局产业推荐模型
+            inputHTML = `
+                <div class="config-item">
+                    <label>产业类别</label>
+                    <select id="ic13-category">
+                        <option selected>战略性新兴</option>
+                        <option>未来产业</option>
+                        <option>传统优势</option>
+                        <option>特色产业</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>推荐数量</label>
+                    <select id="ic13-count">
+                        <option>TOP5</option>
+                        <option selected>TOP10</option>
+                        <option>TOP15</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>排序依据</label>
+                    <select id="ic13-sortby">
+                        <option selected>综合得分</option>
+                        <option>增长潜力</option>
+                        <option>战略价值</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>专家策略</label>
+                    <select id="ic13-strategy">
+                        <option selected>均衡策略</option>
+                        <option>增长导向</option>
+                        <option>创新导向</option>
+                        <option>价值导向</option>
+                    </select>
+                </div>
+            `;
+            break;
+
+        default:
+            // 其他功能使用默认输入
+            inputHTML = `
+                <div class="config-item">
+                    <label>目标产业</label>
+                    <select id="ic-default-industry">
+                        <option>新一代信息技术</option>
+                        <option>半导体</option>
+                        <option>生物医药</option>
+                        <option>新能源</option>
+                        <option>人工智能</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>分析维度</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 创新能力</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 企业规模</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">v</span> 市场份额</label>
+                    </div>
+                </div>
+            `;
+    }
+
+
+    const configGrid = configPanel.querySelector('.config-grid');
+    if (configGrid) {
+        configGrid.innerHTML = inputHTML;
+    }
+    
+    // 重新绑定复选框事件
+    initCheckboxListeners();
+}
+
+        // 渲染产业链深度分析可视化
+        function renderIndustrialChainVisualization(config) {
+            const vizContainer = document.querySelector('.viz-canvas') || document.querySelector('.right-panel');
+            if (!vizContainer) return;
+
+            const vizType = config.vizType || 'table';
+
+            switch(vizType) {
+                case 'tree':
+                    renderTreeViz(vizContainer, config.data);
+                    break;
+                case 'timeline':
+                    renderTimelineViz(vizContainer, config.data);
+                    break;
+                case 'heatmap':
+                    renderHeatmapViz(vizContainer, config.data);
+                    break;
+                case 'radar':
+                    renderRadarViz(vizContainer, config.data);
+                    break;
+                case 'stage':
+                    renderStageViz(vizContainer, config.data);
+                    break;
+                case 'bottleneck':
+                    renderBottleneckViz(vizContainer, config.data);
+                    break;
+                case 'issue':
+                    renderIssueViz(vizContainer, config.data);
+                    break;
+                case 'opportunity':
+                    renderOpportunityViz(vizContainer, config.data);
+                    break;
+                case 'recommend':
+                    renderRecommendViz(vizContainer, config.data);
+                    break;
+                default:
+                    renderTableViz(vizContainer, config.data);
+            }
+        }
+
+        // 树状图渲染
+        function renderTreeViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = data.map(item => `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <div style="font-weight: 600; margin-bottom: 4px;">${item.name} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: var(--primary-subtle); color: var(--primary);">${item.level}</span></div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px;">${item.type} - ${item.value}</div>
+                        ${item.children ? `
+                            <div style="margin-left: 20px; padding-left: 20px; border-left: 2px solid var(--border-light); margin-top: 8px;">
+                                ${item.children.map(child => `<div style="padding: 4px 0; font-size: 0.8rem; color: var(--text-secondary);">• ${child}</div>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 时间线渲染
+        function renderTimelineViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = data.map(item => `
+                    <div style="position: relative; padding-left: 30px; padding-bottom: 20px; border-left: 2px solid var(--border);">
+                        <div style="position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></div>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-bottom: 4px;">${item.year}</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">${item.event} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: ${item.impact === '重大' ? '#fff5f5' : '#fffbe6'}; color: ${item.impact === '重大' ? 'var(--danger)' : 'var(--warning)'};">${item.impact}</span></div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">${item.description}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 热力图渲染
+        function renderHeatmapViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                    ${data.map(item => `
+                        <div style="background: var(--bg-card); border: ${item.heat >= 90 ? '2px solid var(--danger)' : item.heat >= 85 ? '2px solid var(--warning)' : '1px solid var(--border)'}; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">${item.name}</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: ${item.heat >= 90 ? 'var(--danger)' : 'var(--primary)'};">${item.heat}</div>
+                            <div style="font-size: 0.8rem; color: var(--success); margin-bottom: 8px;">${item.trend}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">${item.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+        }
+
+        // 表格渲染
+        function renderTableViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'none';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'block';
+            }
+
+            const tbody = document.getElementById('resultsBody');
+            if (tbody && data.length > 0) {
+                const keys = Object.keys(data[0]);
+                allData = data;
+                totalPages = Math.ceil(allData.length / pageSize);
+                currentPageNum = 1;
+                currentData = allData.slice(0, pageSize);
+                renderTable();
+            }
+        }
+
+        // 瓶颈渲染
+        function renderBottleneckViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = data.map(item => `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="font-weight: 600;">${item.name} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: ${item.severity === '严重' ? '#fff5f5' : '#fffbe6'}; color: ${item.severity === '严重' ? 'var(--danger)' : 'var(--warning)'};">${item.severity}</span></div>
+                            <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: var(--primary-subtle); color: var(--primary);">${item.type}</span>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">${item.description}</div>
+                        <div style="font-size: 0.8rem; color: var(--success);"><strong>建议：</strong>${item.solution}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 机遇渲染
+        function renderOpportunityViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = data.map(item => `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="font-weight: 600;">${item.name} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: ${item.potential === '极高' ? '#fff5f5' : '#f6ffed'}; color: ${item.potential === '极高' ? 'var(--danger)' : 'var(--success)'};">${item.potential}</span></div>
+                            <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: var(--primary-subtle); color: var(--primary);">${item.type}</span>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">${item.description}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">时间周期：${item.timeline}</div>
+                        <div style="font-size: 0.8rem; color: var(--primary); margin-bottom: 8px;"><strong>推荐：</strong>${item.recommendation}</div>
+                        <div style="font-size: 0.8rem; color: var(--success);"><strong>优势：</strong>${item.advantage}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 推荐渲染
+        function renderRecommendViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        ${data.map(item => `
+                            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 8px 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <div style="font-weight: 600;">${item.rank}. ${item.name}</div>
+                                    <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: var(--primary-subtle); color: var(--primary);">${item.category}</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px;">
+                                    <div style="text-align: center;"><div style="font-size: 0.75rem; color: var(--text-secondary);">综合得分</div><div style="font-weight: 600; color: var(--primary);">${item.score}</div></div>
+                                    <div style="text-align: center;"><div style="font-size: 0.75rem; color: var(--text-secondary);">增长率</div><div style="font-weight: 600; color: var(--success);">${item.growth}</div></div>
+                                    <div style="text-align: center;"><div style="font-size: 0.75rem; color: var(--text-secondary);">创新</div><div style="font-weight: 600;">${item.innovation}</div></div>
+                                    <div style="text-align: center;"><div style="font-size: 0.75rem; color: var(--text-secondary);">战略</div><div style="font-weight: 600;">${item.strategic}</div></div>
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--primary); margin-bottom: 4px;"><strong>建议：</strong>${item.suggestion}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);"><strong>理由：</strong>${item.reason}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // 径向图渲染（简化版）
+        function renderRadarViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                        ${data.map(item => `
+                            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px;">
+                                <div style="font-weight: 600; margin-bottom: 12px;">${item.name} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: var(--primary-subtle); color: var(--primary);">${item.rank}</span></div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">评分: <strong>${item.score}</strong> (全国平均: ${item.national_avg})</div>
+                                <div style="margin-bottom: 12px;">
+                                    ${item.indicators.map(ind => `<div style="display: inline-block; margin: 2px; padding: 2px 6px; background: var(--primary-subtle); color: var(--primary); font-size: 0.7rem; border-radius: 3px;">${ind}</div>`).join('')}
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">${item.advantage}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // 阶段渲染（简化版）
+        function renderStageViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                        ${data.map(item => `
+                            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px;">
+                                <div style="font-weight: 600; margin-bottom: 12px;">${item.name} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: ${item.stage === '萌芽期' ? '#fff5f5' : item.stage === '成长期' ? '#f6ffed' : '#fffbe6'}; color: ${item.stage === '萌芽期' ? 'var(--danger)' : item.stage === '成长期' ? 'var(--success)' : 'var(--warning)'};">${item.stage}</span></div>
+                                <div style="margin-bottom: 12px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="font-size: 0.8rem;">技术成熟度</span><span style="font-size: 0.8rem; font-weight: 600;">${item.maturity}%</span></div>
+                                    <div style="height: 6px; background: var(--border-light); border-radius: 3px;"><div style="height: 100%; background: var(--primary); border-radius: 3px; width: ${item.maturity}%;"></div></div>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;"><strong>建议：</strong>${item.suggestions}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // 问题渲染
+        function renderIssueViz(container, data) {
+            const vizPanel = document.querySelector('.viz-panel');
+            if (vizPanel) {
+                vizPanel.style.display = 'block';
+            }
+            const resultsPanel = document.querySelector('.results-panel');
+            if (resultsPanel) {
+                resultsPanel.style.display = 'none';
+            }
+
+            const vizCanvas = container.querySelector('.viz-canvas');
+            if (vizCanvas) {
+                vizCanvas.innerHTML = data.map(item => `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin: 8px 0;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">${item.name} <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: ${item.severity === '严重' ? '#fff5f5' : '#fffbe6'}; color: ${item.severity === '严重' ? 'var(--danger)' : 'var(--warning)'};">${item.severity}</span></div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">${item.description}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">对比：${item.comparison}</div>
+                        <div style="font-size: 0.8rem; color: var(--success);"><strong>建议：</strong>${item.suggestion}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
 
         function init() {
             // Delay to ensure DOM is fully loaded
@@ -1616,6 +2847,16 @@
                     
                     document.getElementById('pageTitle').textContent = config.title;
                     
+                    // 重置为普通模块
+                    isIndustrialChainModule = false;
+                    currentIndustrialChainModuleId = '';
+                    
+                    // 显示表格，隐藏可视化面板
+                    const vizPanel = document.querySelector('.viz-panel');
+                    const resultsPanel = document.querySelector('.results-panel');
+                    if (vizPanel) vizPanel.style.display = 'none';
+                    if (resultsPanel) resultsPanel.style.display = 'block';
+                    
                     // Update industry dropdown options
                     const industrySelect = document.getElementById('industrySelect');
                     industrySelect.innerHTML = config.industry.map(ind => `<option>${ind}</option>`).join('');
@@ -1630,7 +2871,7 @@
                     const checkboxGroup = document.getElementById('checkboxGroup');
                     checkboxGroup.innerHTML = config.configLabels.map((label, i) => `
                         <label class="checkbox-label ${i < 3 ? 'checked' : ''}">
-                            <span class="checkbox-icon">✓</span> ${label}
+                            <span class="checkbox-icon">v</span> ${label}
                         </label>
                     `).join('');
                     
@@ -1777,7 +3018,27 @@
 
         function runAnalysis(evt) {
             const btn = (evt && evt.target && evt.target.closest) ? evt.target.closest('.btn') : null;
-            if (btn) addButtonFeedback(btn);
+            if (btn) {
+                addButtonFeedback(btn);
+                btn.innerHTML = '<span>🔍</span> 分析中...';
+                btn.disabled = true;
+            }
+            
+            // 如果是产业链深度分析模块，渲染对应的可视化
+            if (isIndustrialChainModule && currentIndustrialChainModuleId) {
+                setTimeout(() => {
+                    const config = industrialChainConfigs[currentIndustrialChainModuleId];
+                    if (config) {
+                        renderIndustrialChainVisualization(document.querySelector('.right-panel'));
+                        showToast('✅ 分析完成！');
+                    }
+                    if (btn) {
+                        btn.innerHTML = '<span>🔍</span> 执行分析';
+                        btn.disabled = false;
+                    }
+                }, 500);
+                return;
+            }
             
             const industry = document.getElementById('industrySelect').value;
             const level = document.getElementById('levelSelect').value;
