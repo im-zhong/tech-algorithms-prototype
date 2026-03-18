@@ -1418,7 +1418,7 @@
                 title: '深圳产业链模型',
                 subtitle: '展示深圳区域内产业的全链条节点及对应属性',
                 industry: ['深圳半导体', '深圳新能源', '深圳生物医药', '深圳AI'],
-                vizType: 'table',
+                vizType: 'regional_map',
                 data: [
                     {name: "南山区", type: "产业聚集区", enterprise: "156家", research: "32家", talent: "3456人", highlight: "核心区域"},
                     {name: "福田区", type: "产业聚集区", enterprise: "89家", research: "18家", talent: "2134人", highlight: "重点区域"},
@@ -1477,7 +1477,7 @@
                 title: '产业周期分析模型',
                 subtitle: '识别产业所处周期位置及预测发展趋势',
                 industry: ['成长期产业', '成熟期产业', '起步期产业'],
-                vizType: 'table',
+                vizType: 'cycle_analysis',
                 data: [
                     {name: "人工智能", cycle: "成长期", stage: "快速成长", market: "8500亿", growth: "35%", profit: "18%", trend: "继续上升", future: "成熟期"},
                     {name: "量子信息", cycle: "起步期", stage: "萌芽发展", market: "120亿", growth: "50%", profit: "12%", trend: "快速增长", future: "成长期"},
@@ -1505,7 +1505,7 @@
                 title: '产业链关键环节识别模型',
                 subtitle: '识别产业链中起核心作用的关键节点',
                 industry: ['芯片设计', '晶圆制造', '封装测试'],
-                vizType: 'table',
+                vizType: 'key_links',
                 data: [
                     {name: "EUV光刻机", importance: 98, innovation: 95, market_share: "ASML垄断", value: "关键设备", status: "严重依赖进口", suggestion: "加大国产化研发"},
                     {name: "EDA工具", importance: 95, innovation: 90, market_share: "美企垄断", value: "核心软件", status: "严重依赖进口", suggestion: "培育国产EDA企业"},
@@ -1533,7 +1533,7 @@
                 title: '区域产业指数模型',
                 subtitle: '量化评估区域产业发展水平与竞争力',
                 industry: ['深圳', '北京', '上海', '广州'],
-                vizType: 'table',
+                vizType: 'regional_index',
                 data: [
                     {region: "深圳", enterprise: 92.5, academic: 88.3, supporting: 90.7, total: 90.5, rank: 1, trend: "+2.3%"},
                     {region: "北京", enterprise: 90.8, academic: 95.2, supporting: 87.5, total: 91.2, rank: 1, trend: "+1.8%"},
@@ -2528,7 +2528,7 @@ function generateDynamicInputs(moduleId) {
                     renderTreeViz(vizContainer, config.data);
                     break;
                 case 'regional_map':
-                    renderTableViz(vizContainer, config.data);
+                    renderRegionalMapViz(vizContainer, config.data);
                     break;
                 case 'timeline':
                     renderTimelineViz(vizContainer, config.data);
@@ -2540,19 +2540,19 @@ function generateDynamicInputs(moduleId) {
                     renderRadarViz(vizContainer, config.data);
                     break;
                 case 'cycle_analysis':
-                    renderTableViz(vizContainer, config.data);
+                    renderCycleViz(vizContainer, config.data);
                     break;
                 case 'stage_analysis':
                     renderStageViz(vizContainer, config.data);
                     break;
                 case 'key_links':
-                    renderTableViz(vizContainer, config.data);
+                    renderKeyLinksViz(vizContainer, config.data);
                     break;
                 case 'bottleneck_analysis':
                     renderBottleneckViz(vizContainer, config.data);
                     break;
                 case 'regional_index':
-                    renderTableViz(vizContainer, config.data);
+                    renderRegionalIndexViz(vizContainer, config.data);
                     break;
                 case 'problem_identification':
                     renderIssueViz(vizContainer, config.data);
