@@ -133,6 +133,32 @@
             margin-left: 280px;
             padding: 24px;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .content-split {
+            display: flex;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .left-panel {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hide visualization panel */
+        .viz-panel {
+            display: none;
         }
 
         .page-header {
@@ -961,13 +987,21 @@
         }
 
         /* AI Page special styles */
-        .ai-focused .config-panel,
-        .ai-focused .viz-panel,
-        .ai-focused .results-panel {
+        .ai-section,
+        .workspace-section {
             display: none;
         }
 
-        .ai-focused .ai-section {
+        .ai-focused .page-header {
+            display: none;
+        }
+        .ai-focused .content-split {
+            display: none;
+        }
+
+        .ai-focused .ai-section,
+        .ai-focused .workspace-section {
+            display: block;
             animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -1047,11 +1081,14 @@
         @media (max-width: 1200px) {
             .sidebar { width: 220px; }
             .main-content { margin-left: 220px; }
+            .left-panel { width: 280px; }
         }
 
         @media (max-width: 768px) {
             .sidebar { display: none; }
-            .main-content { margin-left: 0; }
+            .main-content { margin-left: 0; padding: 16px; }
+            .content-split { flex-direction: column; }
+            .left-panel { width: 100%; }
             .config-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -1132,107 +1169,99 @@
             </div>
         </div>
 
-        <div class="config-panel">
-            <div class="config-title">🎯 挖掘约束条件配置</div>
-            <div class="config-grid">
-                <div class="config-item">
-                    <label>选择产业链</label>
-                    <select id="industrySelect">
-                        <option>新一代信息技术</option>
-                        <option>新能源</option>
-                        <option>生物医药</option>
-                        <option>新材料</option>
-                        <option>数字经济</option>
-                    </select>
-                </div>
-                <div class="config-item">
-                    <label>指标层级</label>
-                    <select id="levelSelect">
-                        <option>一级指标</option>
-                        <option>二级指标</option>
-                        <option>三级指标</option>
-                    </select>
-                </div>
-                <div class="config-item">
-                    <label>时间范围</label>
-                    <select id="timeSelect">
-                        <option>2024年</option>
-                        <option>2023年</option>
-                        <option>2022年</option>
-                        <option>近3年</option>
-                        <option>近5年</option>
-                    </select>
-                </div>
-            </div>
-            <div class="checkbox-group" id="checkboxGroup">
-                <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 产业链指标</label>
-                <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 技术指标</label>
-                <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 企业指标</label>
-                <label class="checkbox-label"><span class="checkbox-icon">✓</span> 人才指标</label>
-                <label class="checkbox-label"><span class="checkbox-icon">✓</span> 科研指标</label>
-            </div>
-            <div class="btn-row">
-                <button class="btn btn-primary" onclick="runAnalysis(event)">
-                    <span>🔍</span> 执行分析
-                </button>
-                <button class="btn btn-secondary" onclick="addToReport(event)">
-                    <span>📌</span> 铉选到报告
-                </button>
-            </div>
-        </div>
-
-        <div class="viz-panel">
-            <div class="viz-header">
-                <div class="viz-title">📊 图谱可视化</div>
-                <div class="viz-modes">
-                    <button class="viz-mode-btn active" onclick="switchVizMode(this, 'force')">力导向图</button>
-                    <button class="viz-mode-btn" onclick="switchVizMode(this, 'hierarchy')">层级树</button>
-                    <button class="viz-mode-btn" onclick="switchVizMode(this, 'galaxy')">星系图</button>
-                </div>
-            </div>
-            <div class="viz-canvas">
-                <canvas id="mainCanvas"></canvas>
-            </div>
-        </div>
-
-        <div class="results-panel">
-            <div class="results-header">
-                <div class="results-title">📋 分析结果 (共 <span id="totalCount">156</span> 条)</div>
-                <div class="export-dropdown">
-                    <button class="export-btn" onclick="toggleExportMenu()">⬇️ 导出 ▾</button>
-                    <div class="export-menu" id="exportMenu">
-                        <div class="export-item" onclick="exportData('csv')">📄 导出CSV</div>
-                        <div class="export-item" onclick="exportData('xlsx')">📊 导出Excel</div>
-                        <div class="export-item" onclick="exportData('png')">🖼 导出图片</div>
-                        <div class="export-item" onclick="exportData('pdf')">📑 导出PDF</div>
+        <div class="content-split">
+            <div class="left-panel">
+                <div class="config-panel">
+                    <div class="config-title">🎯 挖掘约束条件配置</div>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label>选择产业链</label>
+                            <select id="industrySelect">
+                                <option>新一代信息技术</option>
+                                <option>新能源</option>
+                                <option>生物医药</option>
+                                <option>新材料</option>
+                                <option>数字经济</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label>指标层级</label>
+                            <select id="levelSelect">
+                                <option>一级指标</option>
+                                <option>二级指标</option>
+                                <option>三级指标</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label>时间范围</label>
+                            <select id="timeSelect">
+                                <option>2024年</option>
+                                <option>2023年</option>
+                                <option>2022年</option>
+                                <option>近3年</option>
+                                <option>近5年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkbox-group" id="checkboxGroup">
+                        <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 产业链指标</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 技术指标</label>
+                        <label class="checkbox-label checked"><span class="checkbox-icon">✓</span> 企业指标</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">✓</span> 人才指标</label>
+                        <label class="checkbox-label"><span class="checkbox-icon">✓</span> 科研指标</label>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="runAnalysis(event)">
+                            <span>🔍</span> 执行分析
+                        </button>
+                        <button class="btn btn-secondary" onclick="addToReport(event)">
+                            <span>📌</span> 铉选到报告
+                        </button>
                     </div>
                 </div>
             </div>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>类型</th>
-                        <th>数量</th>
-                        <th>趋势</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsBody">
-                </tbody>
-            </table>
-            <div class="pagination">
-                <div class="pagination-info">第 <span id="currentPage">1</span> / <span id="totalPages">5</span> 页，每页 <span id="pageSize">10</span> 条</div>
-                <div class="pagination-controls">
-                    <button class="page-btn" onclick="changePage('first')" id="firstBtn">首页</button>
-                    <button class="page-btn" onclick="changePage(-1, null)" id="prevBtn">上一页</button>
-                    <button class="page-btn active" onclick="changePage(0, 1)" data-page="1">1</button>
-                    <button class="page-btn" onclick="changePage(0, 2)" data-page="2">2</button>
-                    <button class="page-btn" onclick="changePage(0, 3)" data-page="3">3</button>
-                    <button class="page-btn" onclick="changePage(0, 4)" data-page="4">4</button>
-                    <button class="page-btn" onclick="changePage(0, 5)" data-page="5">5</button>
-                    <button class="page-btn" onclick="changePage(1, null)" id="nextBtn">下一页</button>
-                    <button class="page-btn" onclick="changePage('last')" id="lastBtn">末页</button>
+
+            <div class="right-panel">
+                <div class="results-panel">
+                    <div class="results-header">
+                        <div class="results-title">📋 分析结果 (共 <span id="totalCount">156</span> 条)</div>
+                        <div class="export-dropdown">
+                            <button class="export-btn" onclick="toggleExportMenu()">⬇️ 导出 ▾</button>
+                            <div class="export-menu" id="exportMenu">
+                                <div class="export-item" onclick="exportData('csv')">📄 导出CSV</div>
+                                <div class="export-item" onclick="exportData('xlsx')">📊 导出Excel</div>
+                                <div class="export-item" onclick="exportData('png')">🖼 导出图片</div>
+                                <div class="export-item" onclick="exportData('pdf')">📑 导出PDF</div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>类型</th>
+                                <th>数量</th>
+                                <th>趋势</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <div class="pagination-info">第 <span id="currentPage">1</span> / <span id="totalPages">5</span> 页，每页 <span id="pageSize">10</span> 条</div>
+                        <div class="pagination-controls">
+                            <button class="page-btn" onclick="changePage('first')" id="firstBtn">首页</button>
+                            <button class="page-btn" onclick="changePage(-1, null)" id="prevBtn">上一页</button>
+                            <button class="page-btn active" onclick="changePage(0, 1)" data-page="1">1</button>
+                            <button class="page-btn" onclick="changePage(0, 2)" data-page="2">2</button>
+                            <button class="page-btn" onclick="changePage(0, 3)" data-page="3">3</button>
+                            <button class="page-btn" onclick="changePage(0, 4)" data-page="4">4</button>
+                            <button class="page-btn" onclick="changePage(0, 5)" data-page="5">5</button>
+                            <button class="page-btn" onclick="changePage(1, null)" id="nextBtn">下一页</button>
+                            <button class="page-btn" onclick="changePage('last')" id="lastBtn">末页</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1533,14 +1562,12 @@
         let allData = pageConfigs['1'].data;
         let totalPages = Math.ceil(allData.length / pageSize);
         let currentData = allData.slice(0, pageSize);
-        let vizMode = 'force';
         let currentMenuId = '1';
 
         function init() {
             // Delay to ensure DOM is fully loaded
             setTimeout(function() {
                 renderTable();
-                initViz();
                 initCheckboxListeners();
                 initMenuListeners();
                 console.log('Initialization complete');
@@ -1609,12 +1636,9 @@
                     
                     // Re-attach checkbox listeners
                     initCheckboxListeners();
-                    
+
                     // Re-render table
                     renderTable();
-                    
-                    // Refresh visualization
-                    initViz();
                 });
             });
         }
@@ -1796,16 +1820,6 @@
             showToast('✅ 已添加到报告工作台');
         }
 
-        function switchVizMode(btn, mode) {
-            document.querySelectorAll('.viz-mode-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            vizMode = mode;
-            initViz();
-            
-            const modeNames = { force: '力导向图', hierarchy: '层级树', galaxy: '星系图' };
-            showToast(`🔄 已切换到 ${modeNames[mode]}`);
-        }
-
         function toggleExportMenu() {
             document.getElementById('exportMenu').classList.toggle('show');
         }
@@ -1818,174 +1832,6 @@
             setTimeout(() => {
                 showToast('✅ 导出成功！');
             }, 1200);
-        }
-
-        function initViz() {
-            // Wait for DOM to be ready
-            setTimeout(function() {
-                const canvas = document.getElementById('mainCanvas');
-                if (!canvas) {
-                    console.log('Canvas not found, retrying...');
-                    setTimeout(initViz, 100);
-                    return;
-                }
-                
-                const parent = canvas.parentElement;
-                if (!parent) return;
-                
-                // Set canvas size
-                canvas.width = parent.offsetWidth || 800;
-                canvas.height = parent.offsetHeight || 300;
-                
-                // Hide fallback message
-                parent.style.removeProperty('--viz-loading');
-                
-                // Create or restart visualization
-                if (window.vizInstance) {
-                    window.vizInstance.stop();
-                }
-                
-                window.vizInstance = new Visualization(canvas, vizMode);
-                window.vizInstance.start();
-                
-                console.log('Visualization started');
-            }, 100);
-        }
-
-        class Visualization {
-            constructor(canvas, mode) {
-                this.canvas = canvas;
-                this.ctx = canvas.getContext('2d');
-                this.mode = mode;
-                this.nodes = [];
-                this.time = 0;
-                this.animationId = null;
-                this.init();
-            }
-
-            init() {
-                const cx = this.canvas.width / 2;
-                const cy = this.canvas.height / 2;
-                // Blue color palette
-                const colors = ['#1890ff', '#40a9ff', '#69c0ff', '#13c2c2', '#36cfc9', '#73d13d', '#95de64'];
-                
-                if (this.mode === 'force') {
-                    for (let i = 0; i < 25; i++) {
-                        this.nodes.push({
-                            x: cx + (Math.random() - 0.5) * 250,
-                            y: cy + (Math.random() - 0.5) * 200,
-                            vx: (Math.random() - 0.5) * 1.5,
-                            vy: (Math.random() - 0.5) * 1.5,
-                            size: 4 + Math.random() * 6,
-                            color: colors[Math.floor(Math.random() * colors.length)]
-                        });
-                    }
-                } else if (this.mode === 'hierarchy') {
-                    this.nodes.push({x: cx, y: 40, size: 20, color: '#1890ff', level: 0});
-                    for (let i = 0; i < 8; i++) {
-                        const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
-                        this.nodes.push({
-                            x: cx + Math.cos(angle) * 100,
-                            y: 120 + Math.sin(angle) * 60,
-                            size: 12,
-                            color: colors[i % colors.length],
-                            level: 1
-                        });
-                    }
-                } else {
-                    for (let i = 0; i < 10; i++) {
-                        this.nodes.push({
-                            angle: (i / 10) * Math.PI * 2,
-                            speed: 0.015 + Math.random() * 0.01,
-                            radius: 80 + Math.random() * 40,
-                            size: 8 + Math.random() * 6,
-                            color: colors[i % colors.length]
-                        });
-                    }
-                }
-            }
-
-            stop() {
-                if (this.animationId) {
-                    cancelAnimationFrame(this.animationId);
-                    this.animationId = null;
-                }
-            }
-
-            start() { 
-                this.stop();
-                this.draw(); 
-            }
-
-            draw() {
-                if (!this.ctx) return;
-                
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.time += 0.02;
-                
-                const cx = this.canvas.width / 2;
-                const cy = this.canvas.height / 2;
-
-                if (this.mode === 'force') {
-                    this.nodes.forEach(n => {
-                        n.x += n.vx;
-                        n.y += n.vy;
-                        if (n.x < n.size || n.x > this.canvas.width - n.size) n.vx *= -1;
-                        if (n.y < n.size || n.y > this.canvas.height - n.size) n.vy *= -1;
-                    });
-
-                    this.nodes.forEach((n1, i) => {
-                        this.nodes.slice(i + 1).forEach(n2 => {
-                            const d = Math.hypot(n1.x - n2.x, n1.y - n2.y);
-                            if (d < 80) {
-                                this.ctx.beginPath();
-                                this.ctx.moveTo(n1.x, n1.y);
-                                this.ctx.lineTo(n2.x, n2.y);
-                                this.ctx.strokeStyle = `rgba(24, 144, 255, ${0.4 - d/200})`;
-                                this.ctx.stroke();
-                            }
-                        });
-                    });
-                } else if (this.mode === 'hierarchy') {
-                    if (this.nodes[0]) {
-                        for (let i = 1; i < this.nodes.length; i++) {
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(this.nodes[0].x, this.nodes[0].y);
-                            this.ctx.lineTo(this.nodes[i].x, this.nodes[i].y);
-                            this.ctx.strokeStyle = 'rgba(24, 144, 255, 0.25)';
-                            this.ctx.stroke();
-                        }
-                    }
-                } else {
-                    this.nodes.forEach(n => {
-                        n.angle += n.speed;
-                        n.x = cx + Math.cos(n.angle) * n.radius;
-                        n.y = cy + Math.sin(n.angle) * n.radius;
-                        
-                        this.ctx.beginPath();
-                        this.ctx.moveTo(cx, cy);
-                        this.ctx.lineTo(n.x, n.y);
-                        this.ctx.strokeStyle = 'rgba(24, 144, 255, 0.15)';
-                        this.ctx.stroke();
-                    });
-                }
-
-                this.nodes.forEach(n => {
-                    const x = n.x || n.x;
-                    const y = n.y || n.y;
-                    const size = n.size;
-                    
-                    this.ctx.beginPath();
-                    this.ctx.arc(x, y, size, 0, Math.PI * 2);
-                    const g = this.ctx.createRadialGradient(x, y, 0, x, y, size * 1.5);
-                    g.addColorStop(0, n.color);
-                    g.addColorStop(1, 'rgba(255,255,255,0)');
-                    this.ctx.fillStyle = g;
-                    this.ctx.fill();
-                });
-
-                this.animationId = requestAnimationFrame(() => this.draw());
-            }
         }
 
         function setAIQuery(text) {
@@ -2068,10 +1914,6 @@
 
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeModal();
-        });
-
-        window.addEventListener('resize', function() {
-            setTimeout(initViz, 200);
         });
 
         // Ensure init runs
